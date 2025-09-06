@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>History Exam Demo</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+      .timer {
+        font-size: 20px;
+        font-weight: bold;
+        color: red;
+        margin-bottom: 15px;
+      }
+      .question {
+        margin: 15px 0;
+      }
+      button {
+        padding: 10px 20px;
+        font-size: 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>JHS1 History Exam (Demo)</h1>
+    <div class="timer" id="timer">Time Left: 30:00</div>
+
+    <form id="examForm" action="https://formspree.io/f/xjkeppyg" method="POST">
+      <!-- Demo Questions -->
+      <div class="question">
+        <p>1. Who was the first president of Ghana?</p>
+        <label
+          ><input type="radio" name="q1" value="Kwame Nkrumah" /> Kwame
+          Nkrumah</label
+        ><br />
+        <label
+          ><input type="radio" name="q1" value="J. J. Rawlings" /> J. J.
+          Rawlings</label
+        ><br />
+        <label
+          ><input type="radio" name="q1" value="Kofi Annan" /> Kofi Annan</label
+        >
+      </div>
+
+      <div class="question">
+        <p>
+          2. The trans-Saharan trade mainly connected West Africa with which
+          region?
+        </p>
+        <label><input type="radio" name="q2" value="Europe" /> Europe</label
+        ><br />
+        <label
+          ><input type="radio" name="q2" value="North Africa" /> North
+          Africa</label
+        ><br />
+        <label
+          ><input type="radio" name="q2" value="South America" /> South
+          America</label
+        >
+      </div>
+
+      <div class="question">
+        <p>
+          3. True or False: The Asante kingdom was known for its military
+          strength and gold resources.
+        </p>
+        <label><input type="radio" name="q3" value="True" /> True</label><br />
+        <label><input type="radio" name="q3" value="False" /> False</label>
+      </div>
+
+      <input type="hidden" name="score" id="scoreField" />
+      <input type="hidden" name="review" id="reviewField" />
+
+      <button type="submit">Submit</button>
+    </form>
+
+    <script>
+      // Exam duration in ms (30 mins here, change to 45 * 60 * 1000 for 45 mins)
+      const examDuration = 30 * 60 * 1000;
+
+      function startTimer() {
+        let startTime = localStorage.getItem("examStartTime");
+        if (!startTime) {
+          startTime = new Date().getTime();
+          localStorage.setItem("examStartTime", startTime);
+        }
+
+        const timerEl = document.getElementById("timer");
+
+        function updateTimer() {
+          const now = new Date().getTime();
+          const timePassed = now - startTime;
+          const timeLeft = examDuration - timePassed;
+
+          if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            timerEl.textContent = "Time Left: 00:00";
+            autoSubmit();
+          } else {
+            const minutes = Math.floor(timeLeft / (1000 * 60));
+            const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+            timerEl.textContent = `Time Left: ${minutes}:${seconds
+              .toString()
+              .padStart(2, "0")}`;
+          }
+        }
+
+        updateTimer();
+        const timerInterval = setInterval(updateTimer, 1000);
+      }
+
+      function autoSubmit() {
+        document.getElementById("examForm").requestSubmit();
+      }
+
+      // Auto-grading before submit
+      document
+        .getElementById("examForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          const answers = {
+            q1: "Kwame Nkrumah",
+            q2: "North Africa",
+            q3: "True",
+          };
+
+          let score = 0;
+          let review = "";
+
+          Object.keys(answers).forEach((q, i) => {
+            const chosen = document.querySelector(`input[name="${q}"]:checked`);
+            const studentAns = chosen ? chosen.value : "No Answer";
+            if (studentAns === answers[q]) score++;
+            review += `Q${
+              i + 1
+            }: Your Answer = ${studentAns}, Correct Answer = ${answers[q]}\n`;
+          });
+
+          const total = Object.keys(answers).length;
+          const percent = Math.round((score / total) * 100);
+
+          // Show only score to student
+          alert(`Your Score: ${score}/${total} (${percent}%)`);
+
+          // Send full review privately
+          document.getElementById(
+            "scoreField"
+          ).value = `${score}/${total} (${percent}%)`;
+          document.getElementById("reviewField").value = review;
+
+          // Clear timer storage after submission
+          localStorage.removeItem("examStartTime");
+
+          e.target.submit();
+        });
+
+      startTimer();
+    </script>
+  </body>
+</html>
