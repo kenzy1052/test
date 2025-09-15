@@ -1,0 +1,1376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BioQuiz - Housefly Test</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary-color: #0d9488;
+            --secondary-color: #14b8a6;
+            --accent-color: #2dd4bf;
+            --success-color: #22c55e;
+            --danger-color: #ef4444;
+            --warning-color: #f59e0b;
+            --light-color: #f8fafc;
+            --dark-color: #1e293b;
+            --text-primary: #0f172a;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f1f5f9;
+            --bg-tertiary: #f8fafc;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.3);
+        }
+        body {
+            background: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 50%, #e0f2fe 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow-x: hidden;
+        }
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 80%, rgba(13, 148, 136, 0.1) 0%, transparent 50%),
+                          radial-gradient(circle at 80% 20%, rgba(20, 184, 166, 0.1) 0%, transparent 50%),
+                          radial-gradient(circle at 40% 40%, rgba(45, 212, 191, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            width: 100%;
+        }
+        header {
+            background: linear-gradient(135deg, rgba(13, 148, 136, 0.9), rgba(20, 184, 166, 0.9));
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            color: white;
+            padding: 25px 0;
+            text-align: center;
+            box-shadow: var(--shadow-2xl);
+            position: relative;
+            overflow: hidden;
+            border-bottom: 1px solid var(--glass-border);
+        }
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+        }
+        header::after {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            animation: rotate 30s linear infinite;
+        }
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        header > * {
+            position: relative;
+            z-index: 1;
+        }
+        .logo {
+            font-size: 2.8rem;
+            font-weight: 800;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        .logo i {
+            animation: pulse 2s infinite;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+        }
+        @keyframes pulse {
+            0% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.1) rotate(5deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+        .tagline {
+            font-size: 1.3rem;
+            opacity: 0.95;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+        }
+        .card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 20px;
+            box-shadow: var(--shadow-xl);
+            padding: 35px;
+            margin: 35px 0;
+            transition: var(--transition);
+            border: 1px solid var(--glass-border);
+            position: relative;
+            overflow: hidden;
+        }
+        .card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(13, 148, 136, 0.5), transparent);
+        }
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-2xl);
+            border-color: var(--accent-color);
+        }
+        .card:hover::before {
+            height: 2px;
+        }
+        .btn {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 16px 32px;
+            border: none;
+            border-radius: 16px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-align: center;
+            transition: var(--transition);
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .btn::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.6s;
+        }
+        .btn::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        .btn:hover::before {
+            left: 100%;
+        }
+        .btn:hover::after {
+            width: 300px;
+            height: 300px;
+        }
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-2xl);
+            background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+        }
+        .btn:active {
+            transform: translateY(-1px);
+        }
+        .btn-success {
+            background: linear-gradient(135deg, var(--success-color), #059669);
+        }
+        .btn-success:hover {
+            background: linear-gradient(135deg, #059669, #047857);
+        }
+        .btn-danger {
+            background: linear-gradient(135deg, var(--danger-color), #dc2626);
+        }
+        .btn-danger:hover {
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+        }
+        .timer {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            text-align: center;
+            padding: 15px 25px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: var(--shadow-2xl);
+            border: 1px solid var(--glass-border);
+            z-index: 1000;
+            transition: var(--transition);
+        }
+        .timer::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 20px;
+            background: linear-gradient(135deg, rgba(13, 148, 136, 0.1), rgba(20, 184, 166, 0.1));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .timer:hover::before {
+            opacity: 1;
+        }
+        .timer > * {
+            position: relative;
+            z-index: 1;
+        }
+        .timer.warning {
+            color: var(--warning-color);
+            border-color: var(--warning-color);
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(251, 191, 36, 0.1));
+            animation: pulse-warning 2s infinite;
+        }
+        .timer.danger {
+            color: var(--danger-color);
+            border-color: var(--danger-color);
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(248, 113, 113, 0.1));
+            animation: pulse-danger 1s infinite;
+        }
+        @keyframes pulse-warning {
+            0%, 100% {
+                box-shadow: var(--shadow-2xl);
+                transform: scale(1);
+            }
+            50% {
+                box-shadow: 0 0 30px rgba(245, 158, 11, 0.6);
+                transform: scale(1.05);
+            }
+        }
+        @keyframes pulse-danger {
+            0%, 100% {
+                box-shadow: var(--shadow-2xl);
+                transform: scale(1);
+            }
+            50% {
+                box-shadow: 0 0 30px rgba(239, 68, 68, 0.6);
+                transform: scale(1.05);
+            }
+        }
+        .question-card {
+            margin-bottom: 35px;
+            padding: 28px;
+            border-left: 4px solid var(--primary-color);
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 20px;
+            transition: var(--transition);
+            border: 1px solid var(--glass-border);
+            position: relative;
+            overflow: hidden;
+        }
+        .question-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+        }
+        .question-card::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(13, 148, 136, 0.1) 0%, transparent 50%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+        .question-card:hover::before {
+            transform: scaleX(1);
+        }
+        .question-card:hover::after {
+            opacity: 1;
+        }
+        .question-card:hover {
+            background: var(--bg-secondary);
+            border-color: var(--accent-color);
+            transform: translateX(6px);
+            box-shadow: var(--shadow-2xl);
+        }
+        .question-number {
+            font-weight: 800;
+            color: var(--primary-color);
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .question-text {
+            font-size: 1.2rem;
+            margin-bottom: 18px;
+            line-height: 1.7;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+        .options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 18px;
+        }
+        .option {
+            padding: 18px;
+            border: 2px solid var(--border-color);
+            border-radius: 16px;
+            cursor: pointer;
+            transition: var(--transition);
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+        .option::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            opacity: 0.1;
+            transition: width 0.4s ease;
+        }
+        .option::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(13, 148, 136, 0.1) 0%, transparent 50%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+        .option:hover::before {
+            width: 100%;
+        }
+        .option:hover::after {
+            opacity: 1;
+        }
+        .option:hover {
+            border-color: var(--primary-color);
+            background: var(--bg-secondary);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-xl);
+        }
+        .option.selected {
+            border-color: var(--primary-color);
+            background: linear-gradient(135deg, rgba(13, 148, 136, 0.15), rgba(20, 184, 166, 0.15));
+            font-weight: 700;
+            box-shadow: var(--shadow-xl);
+            transform: translateY(-2px);
+        }
+        .option.selected::before {
+            width: 100%;
+        }
+        .option input[type="radio"] {
+            margin-right: 12px;
+            accent-color: var(--primary-color);
+            transform: scale(1.2);
+        }
+        .progress-container {
+            margin: 25px 0;
+            padding: 25px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--shadow-lg);
+        }
+        .progress-bar {
+            height: 16px;
+            background: var(--bg-secondary);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .progress {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            width: 0%;
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+        }
+        .progress::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            animation: shimmer 2s infinite;
+        }
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin: 50px 0 25px;
+            padding-bottom: 18px;
+            border-bottom: 3px solid var(--border-color);
+            position: relative;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .section-title::before {
+            content: "";
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            border-radius: 2px;
+        }
+        .section-title::after {
+            content: "";
+            position: absolute;
+            bottom: -3px;
+            left: 80px;
+            width: calc(100% - 80px);
+            height: 3px;
+            background: linear-gradient(90deg, var(--secondary-color), transparent);
+            border-radius: 2px;
+            opacity: 0.5;
+        }
+        .hidden {
+            display: none;
+        }
+        .result-card {
+            text-align: center;
+            padding: 50px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--shadow-2xl);
+        }
+        .score {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: var(--primary-color);
+            margin: 25px 0;
+            text-shadow: 0 2px 10px rgba(13, 148, 136, 0.3);
+        }
+        .score-message {
+            font-size: 1.6rem;
+            margin-bottom: 35px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        .welcome-screen {
+            text-align: center;
+            background: linear-gradient(135deg, var(--glass-bg), var(--bg-secondary));
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        .welcome-screen h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: var(--text-primary);
+            margin-bottom: 25px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 2px 20px rgba(13, 148, 136, 0.3);
+        }
+        .welcome-screen p {
+            font-size: 1.3rem;
+            margin-bottom: 35px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            font-weight: 500;
+        }
+        .instructions {
+            text-align: left;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 28px;
+            border-radius: 20px;
+            margin: 25px 0;
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--shadow-lg);
+        }
+        .instructions h3 {
+            color: var(--primary-color);
+            margin-bottom: 18px;
+            font-size: 1.4rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .instructions ul {
+            padding-left: 25px;
+        }
+        .instructions li {
+            margin-bottom: 15px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            font-weight: 500;
+        }
+        .exam-info {
+            display: flex;
+            justify-content: space-around;
+            margin: 40px 0;
+            flex-wrap: wrap;
+            gap: 25px;
+        }
+        .info-item {
+            text-align: center;
+            padding: 25px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--shadow-lg);
+            min-width: 180px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        .info-item::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+        }
+        .info-item:hover::before {
+            transform: scaleX(1);
+        }
+        .info-item:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-2xl);
+            border-color: var(--accent-color);
+        }
+        .info-value {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+            text-shadow: 0 2px 10px rgba(13, 148, 136, 0.3);
+        }
+        .info-label {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        footer {
+            background: linear-gradient(135deg, var(--text-primary), #334155);
+            color: white;
+            text-align: center;
+            padding: 40px 0;
+            margin-top: auto;
+            border-top: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        footer p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            font-weight: 500;
+        }
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            .card {
+                padding: 25px;
+                margin: 25px 0;
+            }
+            .options {
+                grid-template-columns: 1fr;
+            }
+            .exam-info {
+                flex-direction: column;
+                align-items: center;
+            }
+            .info-item {
+                width: 100%;
+                max-width: 250px;
+            }
+            .timer {
+                top: 10px;
+                right: 10px;
+                padding: 12px 18px;
+                font-size: 1.1rem;
+            }
+            .welcome-screen h1 {
+                font-size: 2.8rem;
+            }
+            .section-title {
+                font-size: 2rem;
+            }
+            .question-card {
+                padding: 20px;
+                margin-bottom: 25px;
+            }
+            .question-text {
+                font-size: 1.1rem;
+            }
+            .option {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-microscope"></i>
+                BioQuiz
+            </div>
+            <div class="tagline">Science Education Platform</div>
+        </div>
+    </header>
+    <main class="container">
+        <!-- Welcome Screen -->
+        <div id="welcome-screen" class="card welcome-screen">
+            <h1>Housefly (Musca domestica) Test</h1>
+            <p>
+                You are about to take a test on the housefly. 
+                Please read the instructions carefully before starting.
+            </p>
+            <div class="exam-info">
+                <div class="info-item">
+                    <div class="info-value">10</div>
+                    <div class="info-label">Questions</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-value">12</div>
+                    <div class="info-label">Minutes</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-value">1</div>
+                    <div class="info-label">Subject</div>
+                </div>
+            </div>
+            <div class="instructions">
+                <h3>Test Instructions</h3>
+                <ul>
+                    <li>The test consists of 10 multiple choice questions</li>
+                    <li>You have 12 minutes to complete the test</li>
+                    <li>The timer will continue even if you refresh the page or leave and come back</li>
+                    <li>When time runs out, your test will be automatically submitted</li>
+                    <li>Select one answer for each question</li>
+                    <li>After submission, you will only see your final score</li>
+                    <li>Make sure you have a stable internet connection</li>
+                </ul>
+            </div>
+            <button id="start-quiz" class="btn">Start Test</button>
+        </div>
+        <!-- Quiz Screen -->
+        <div id="quiz-screen" class="hidden">
+            <div class="timer">
+                <i class="fas fa-clock"></i>
+                <span id="time-remaining">12:00</span>
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div id="progress" class="progress"></div>
+                </div>
+            </div>
+            <form id="quiz-form">
+                <h2 class="section-title">HOUSEFLY (MUSCA DOMESTICA)</h2>
+                <div class="question-card">
+                    <div class="question-number">Question 1</div>
+                    <div class="question-text">
+                        Which of the following best explains why housefly populations increase very quickly under ideal conditions?
+                    </div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q1" value="A" /> A. They feed on both solid and liquid food.
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q1" value="B" /> B. Their life cycle is very short and continuous.
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q1" value="C" /> C. They have strong wings and can travel long distances.
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q1" value="D" /> D. They lay eggs in hidden places like garbage.
+                        </label>
+                    </div>
+                </div>
+                <div class="question-card">
+                    <div class="question-number">Question 2</div>
+                    <div class="question-text">
+                        A female housefly lays 120 eggs on average. If all survive and develop into adults within 10 days, what is the most likely danger to humans?
+                    </div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q2" value="A" /> A. Food supply will increase.
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q2" value="B" /> B. They may multiply into thousands, spreading diseases rapidly.
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q2" value="C" /> C. The eggs will remain dormant for several years.
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q2" value="D" /> D. They will turn into mosquitoes.
+                        </label>
+                    </div>
+                </div>
+                <div class="question-card">
+                    <div class="question-number">Question 3</div>
+                    <div class="question-text">
+                        Which of the following correctly matches the stage with its description?
+                    </div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q3" value="A" /> A. Egg – brown and hard, resting stage.
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q3" value="B" /> B. Larva – soft, white, legless, feeds on waste.
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q3" value="C" /> C. Pupa – has wings and legs, reproduces.
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q3" value="D" /> D. Adult – hatches directly from the egg.
+                        </label>
+                    </div>
+                </div>
+                <div class="question-card">
+                    <div class="question-number">Question 4</div>
+                    <div class="question-text">
+                        The pupa stage of the housefly is most similar to which stage of a butterfly?
+                    </div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q4" value="A" /> A. Egg
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q4" value="B" /> B. Larva (caterpillar)
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q4" value="C" /> C. Pupa (chrysalis)
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q4" value="D" /> D. Adult
+                        </label>
+                    </div>
+                </div>
+                <div class="question-card">
+                    <div class="question-number">Question 5</div>
+                    <div class="question-text">
+                        Which of these statements is FALSE about the housefly?
+                    </div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q5" value="A" /> A. They can live for about 15–30 days as adults.
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q5" value="B" /> B. They only feed on clean sugar and liquids.
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q5" value="C" /> C. They can transfer more than 100 pathogens.
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q5" value="D" /> D. Their larval stage is called a maggot.
+                        </label>
+                    </div>
+                </div>
+                <div class="question-card">
+                    <div class="question-number">Question 6</div>
+                    <div class="question-text">
+                        Why are houseflies considered more dangerous than mosquitoes in some environments?
+                    </div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q6" value="A" /> A. They live longer than mosquitoes.
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q6" value="B" /> B. They feed directly on human blood.
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q6" value="C" /> C. They can spread many types of diseases through food and waste.
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q6" value="D" /> D. They do not undergo complete metamorphosis.
+                        </label>
+                    </div>
+                </div>
+                <div class="question-card">
+                    <div class="question-number">Question 7</div>
+                    <div class="question-text">
+                        If housefly eggs take 1 day to hatch, larvae last 4 days, pupae last 5 days, and adults live for 20 days, what is the maximum length of one full life cycle?
+                    </div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q7" value="A" /> A. 10 days
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q7" value="B" /> B. 20 days
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q7" value="C" /> C. 30 days
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q7" value="D" /> D. 40 days
+                        </label>
+                    </div>
+                </div>
+                <div class="question-card">
+                    <div class="question-number">Question 8</div>
+                    <div class="question-text">
+                        A community leaves garbage uncovered near their homes. After one month, there is a rise in dysentery cases. Which is the most logical explanation?
+                    </div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q8" value="A" /> A. Flies lay eggs only on clean food.
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q8" value="B" /> B. Garbage prevented the flies from reproducing.
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q8" value="C" /> C. Houseflies multiplied in the garbage and spread diseases to humans.
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q8" value="D" /> D. Garbage reduced the lifespan of flies.
+                        </label>
+                    </div>
+                </div>
+                <div class="question-card">
+                    <div class="question-number">Question 9</div>
+                    <div class="question-text">
+                        Which of the following control methods directly breaks the life cycle of the housefly?
+                    </div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q9" value="A" /> A. Spraying adults with insecticide only.
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q9" value="B" /> B. Keeping food covered.
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q9" value="C" /> C. Proper disposal of waste to prevent egg-laying.
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q9" value="D" /> D. Using fly swatters inside the house.
+                        </label>
+                    </div>
+                </div>
+                <div class="question-card">
+                    <div class="question-number">Question 10</div>
+                    <div class="question-text">
+                        A student claims: "The housefly life cycle has three main stages: egg, larva, and adult."
+                        What is wrong with this statement?
+                    </div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q10" value="A" /> A. The larva stage is not part of the cycle.
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q10" value="B" /> B. The student forgot to include the pupa stage.
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q10" value="C" /> C. Eggs do not develop into adults.
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q10" value="D" /> D. The adult stage does not exist in flies.
+                        </label>
+                    </div>
+                </div>
+                <div style="text-align: center; margin-top: 30px">
+                    <button type="submit" class="btn btn-success">Submit Test</button>
+                </div>
+            </form>
+        </div>
+        <!-- Result Screen -->
+        <div id="result-screen" class="card result-card hidden">
+            <h1>Test Completed!</h1>
+            <div class="score" id="score-display">0/10 (0%)</div>
+            <div class="score-message" id="score-message">
+                Thank you for completing the test.
+            </div>
+            <p>A detailed review has been sent to the instructor.</p>
+            <button id="restart-quiz" class="btn">Take Test Again</button>
+        </div>
+    </main>
+    <footer>
+        <div class="container">
+            <p>Made with ❤️ by BioQuiz</p>
+            <p>© 2025 BioQuiz Test Platform. All rights reserved.</p>
+        </div>
+    </footer>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Mouse tracking for interactive effects
+            document.addEventListener("mousemove", function (e) {
+                const cards = document.querySelectorAll(".question-card, .option");
+                cards.forEach((card) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    card.style.setProperty("--mouse-x", x + "px");
+                    card.style.setProperty("--mouse-y", y + "px");
+                });
+            });
+            // DOM Elements
+            const welcomeScreen = document.getElementById("welcome-screen");
+            const quizScreen = document.getElementById("quiz-screen");
+            const resultScreen = document.getElementById("result-screen");
+            const startQuizBtn = document.getElementById("start-quiz");
+            const quizForm = document.getElementById("quiz-form");
+            const restartQuizBtn = document.getElementById("restart-quiz");
+            const timeRemainingElement = document.getElementById("time-remaining");
+            const progressBar = document.getElementById("progress");
+            const scoreDisplay = document.getElementById("score-display");
+            const scoreMessage = document.getElementById("score-message");
+            // Timer variables
+            let examDuration = 12 * 60; // 12 minutes in seconds
+            let timeRemaining = examDuration;
+            let examStartTime;
+            let timerInterval;
+            // Correct answers
+            const correctAnswers = {
+                q1: "B", // Their life cycle is very short and continuous.
+                q2: "B", // They may multiply into thousands, spreading diseases rapidly.
+                q3: "B", // Larva – soft, white, legless, feeds on waste.
+                q4: "C", // Pupa (chrysalis)
+                q5: "B", // They only feed on clean sugar and liquids.
+                q6: "C", // They can spread many types of diseases through food and waste.
+                q7: "C", // 30 days
+                q8: "C", // Houseflies multiplied in the garbage and spread diseases to humans.
+                q9: "C", // Proper disposal of waste to prevent egg-laying.
+                q10: "B" // The student forgot to include the pupa stage.
+            };
+            // Question text for email report
+            const questionTexts = {
+                q1: "Which of the following best explains why housefly populations increase very quickly under ideal conditions?",
+                q2: "A female housefly lays 120 eggs on average. If all survive and develop into adults within 10 days, what is the most likely danger to humans?",
+                q3: "Which of the following correctly matches the stage with its description?",
+                q4: "The pupa stage of the housefly is most similar to which stage of a butterfly?",
+                q5: "Which of these statements is FALSE about the housefly?",
+                q6: "Why are houseflies considered more dangerous than mosquitoes in some environments?",
+                q7: "If housefly eggs take 1 day to hatch, larvae last 4 days, pupae last 5 days, and adults live for 20 days, what is the maximum length of one full life cycle?",
+                q8: "A community leaves garbage uncovered near their homes. After one month, there is a rise in dysentery cases. Which is the most logical explanation?",
+                q9: "Which of the following control methods directly breaks the life cycle of the housefly?",
+                q10: "A student claims: \"The housefly life cycle has three main stages: egg, larva, and adult.\" What is wrong with this statement?"
+            };
+            // Option text for email report
+            const optionTexts = {
+                q1: {
+                    A: "A. They feed on both solid and liquid food.",
+                    B: "B. Their life cycle is very short and continuous.",
+                    C: "C. They have strong wings and can travel long distances.",
+                    D: "D. They lay eggs in hidden places like garbage."
+                },
+                q2: {
+                    A: "A. Food supply will increase.",
+                    B: "B. They may multiply into thousands, spreading diseases rapidly.",
+                    C: "C. The eggs will remain dormant for several years.",
+                    D: "D. They will turn into mosquitoes."
+                },
+                q3: {
+                    A: "A. Egg – brown and hard, resting stage.",
+                    B: "B. Larva – soft, white, legless, feeds on waste.",
+                    C: "C. Pupa – has wings and legs, reproduces.",
+                    D: "D. Adult – hatches directly from the egg."
+                },
+                q4: {
+                    A: "A. Egg",
+                    B: "B. Larva (caterpillar)",
+                    C: "C. Pupa (chrysalis)",
+                    D: "D. Adult"
+                },
+                q5: {
+                    A: "A. They can live for about 15–30 days as adults.",
+                    B: "B. They only feed on clean sugar and liquids.",
+                    C: "C. They can transfer more than 100 pathogens.",
+                    D: "D. Their larval stage is called a maggot."
+                },
+                q6: {
+                    A: "A. They live longer than mosquitoes.",
+                    B: "B. They feed directly on human blood.",
+                    C: "C. They can spread many types of diseases through food and waste.",
+                    D: "D. They do not undergo complete metamorphosis."
+                },
+                q7: {
+                    A: "A. 10 days",
+                    B: "B. 20 days",
+                    C: "C. 30 days",
+                    D: "D. 40 days"
+                },
+                q8: {
+                    A: "A. Flies lay eggs only on clean food.",
+                    B: "B. Garbage prevented the flies from reproducing.",
+                    C: "C. Houseflies multiplied in the garbage and spread diseases to humans.",
+                    D: "D. Garbage reduced the lifespan of flies."
+                },
+                q9: {
+                    A: "A. Spraying adults with insecticide only.",
+                    B: "B. Keeping food covered.",
+                    C: "C. Proper disposal of waste to prevent egg-laying.",
+                    D: "D. Using fly swatters inside the house."
+                },
+                q10: {
+                    A: "A. The larva stage is not part of the cycle.",
+                    B: "B. The student forgot to include the pupa stage.",
+                    C: "C. Eggs do not develop into adults.",
+                    D: "D. The adult stage does not exist in flies."
+                }
+            };
+            // Check if exam was already started
+            function checkExistingExam() {
+                const savedStartTime = localStorage.getItem("examStartTime");
+                if (savedStartTime) {
+                    const startTime = new Date(savedStartTime);
+                    const currentTime = new Date();
+                    const elapsedTime = Math.floor((currentTime - startTime) / 1000);
+                    if (elapsedTime < examDuration) {
+                        // Exam is in progress
+                        examStartTime = startTime;
+                        timeRemaining = examDuration - elapsedTime;
+                        startQuiz();
+                    } else {
+                        // Exam time has expired
+                        localStorage.removeItem("examStartTime");
+                    }
+                }
+            }
+            // Start the quiz
+            function startQuiz() {
+                welcomeScreen.classList.add("hidden");
+                quizScreen.classList.remove("hidden");
+                
+                // If it's a new exam, save start time
+                if (!examStartTime) {
+                    examStartTime = new Date();
+                    localStorage.setItem("examStartTime", examStartTime);
+                }
+                
+                // Start timer
+                updateTimerDisplay();
+                timerInterval = setInterval(updateTimer, 1000);
+                
+                // Restore saved answers if any
+                restoreAnswers();
+                
+                // Add event listeners to options
+                const options = document.querySelectorAll(".option");
+                options.forEach((option) => {
+                    option.addEventListener("click", function () {
+                        const radio = this.querySelector('input[type="radio"]');
+                        if (radio) {
+                            radio.checked = true;
+                            // Update visual selection
+                            const questionCard = this.closest(".question-card");
+                            const allOptions = questionCard.querySelectorAll(".option");
+                            allOptions.forEach((opt) => opt.classList.remove("selected"));
+                            this.classList.add("selected");
+                            // Save answer to localStorage
+                            saveAnswers();
+                            updateProgress();
+                        }
+                    });
+                });
+                
+                updateProgress();
+            }
+            // Update timer
+            function updateTimer() {
+                timeRemaining--;
+                updateTimerDisplay();
+                if (timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    submitQuiz(true); // Auto-submit when time runs out
+                }
+            }
+            // Update timer display
+            function updateTimerDisplay() {
+                const minutes = Math.floor(timeRemaining / 60);
+                const seconds = timeRemaining % 60;
+                timeRemainingElement.textContent = `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+                
+                // Update timer styling based on time remaining
+                const timerElement = document.querySelector(".timer");
+                timerElement.classList.remove("warning", "danger");
+                if (timeRemaining <= 60) {
+                    // 1 minute or less
+                    timerElement.classList.add("danger");
+                } else if (timeRemaining <= 300) {
+                    // 5 minutes or less
+                    timerElement.classList.add("warning");
+                }
+            }
+            // Update progress bar
+            function updateProgress() {
+                const totalQuestions = Object.keys(correctAnswers).length;
+                const answeredQuestions = document.querySelectorAll('input[type="radio"]:checked').length;
+                const progressPercentage = (answeredQuestions / totalQuestions) * 100;
+                progressBar.style.width = `${progressPercentage}%`;
+            }
+            // Save answers to localStorage
+            function saveAnswers() {
+                const formData = new FormData(quizForm);
+                const answers = {};
+                for (let [key, value] of formData.entries()) {
+                    answers[key] = value;
+                }
+                localStorage.setItem("quizAnswers", JSON.stringify(answers));
+            }
+            // Restore answers from localStorage
+            function restoreAnswers() {
+                const savedAnswers = localStorage.getItem("quizAnswers");
+                if (savedAnswers) {
+                    const answers = JSON.parse(savedAnswers);
+                    for (let [questionId, answer] of Object.entries(answers)) {
+                        const radio = document.querySelector(`input[name="${questionId}"][value="${answer}"]`);
+                        if (radio) {
+                            radio.checked = true;
+                            // Update visual selection
+                            const option = radio.closest(".option");
+                            if (option) {
+                                option.classList.add("selected");
+                            }
+                        }
+                    }
+                    updateProgress();
+                }
+            }
+            // Submit quiz
+            function submitQuiz(isAutoSubmit = false) {
+                clearInterval(timerInterval);
+                const formData = new FormData(quizForm);
+                const answers = {};
+                for (let [key, value] of formData.entries()) {
+                    answers[key] = value;
+                }
+                // Calculate score
+                let score = 0;
+                const results = [];
+                for (let [questionId, correctAnswer] of Object.entries(correctAnswers)) {
+                    const studentAnswer = answers[questionId];
+                    const isCorrect = studentAnswer === correctAnswer;
+                    if (isCorrect) {
+                        score++;
+                    }
+                    results.push({
+                        questionId,
+                        question: questionTexts[questionId],
+                        studentAnswer: studentAnswer || "Not answered",
+                        correctAnswer: optionTexts[questionId][correctAnswer],
+                        isCorrect,
+                        options: Object.values(optionTexts[questionId])
+                    });
+                }
+                const percentage = Math.round((score / Object.keys(correctAnswers).length) * 100);
+                
+                // Display results to student
+                displayResults(score, percentage);
+                
+                // Send detailed results to email
+                sendResultsToEmail(results, score, percentage, isAutoSubmit);
+                
+                // Clear localStorage
+                localStorage.removeItem("examStartTime");
+                localStorage.removeItem("quizAnswers");
+            }
+            // Display results to student
+            function displayResults(score, percentage) {
+                // Set message based on score
+                if (percentage >= 80) {
+                    scoreMessage.textContent = "Excellent work! You've mastered this material.";
+                } else if (percentage >= 60) {
+                    scoreMessage.textContent = "Good job! You have a solid understanding of the material.";
+                } else if (percentage >= 40) {
+                    scoreMessage.textContent = "Nice effort! Keep studying to improve your knowledge.";
+                } else {
+                    scoreMessage.textContent = "Keep practicing! Review the material and try again.";
+                }
+                
+                // Show result screen
+                quizScreen.classList.add("hidden");
+                resultScreen.classList.remove("hidden");
+                scoreDisplay.textContent = `${score}/${Object.keys(correctAnswers).length} (${percentage}%)`;
+            }
+            // Send results to email via Formspree
+            function sendResultsToEmail(results, score, percentage, isAutoSubmit) {
+                // Create email content
+                let emailContent = `BioQuiz Housefly Test Results\n\n`;
+                emailContent += `Student Score: ${score}/${Object.keys(correctAnswers).length} (${percentage}%)\n`;
+                emailContent += `Submission Type: ${isAutoSubmit ? "Auto-submitted (time expired)" : "Manual submission"}\n`;
+                emailContent += `Submission Time: ${new Date().toLocaleString()}\n\n`;
+                emailContent += `Detailed Results:\n\n`;
+                
+                results.forEach((result) => {
+                    emailContent += `Question ${result.questionId.substring(1)}: ${result.question}\n\n`;
+                    
+                    emailContent += `Options:\n`;
+                    result.options.forEach((option) => {
+                        emailContent += `${option}\n`;
+                    });
+                    emailContent += `\n`;
+                    
+                    emailContent += `Student's Answer: ${result.studentAnswer}\n`;
+                    emailContent += `Correct Answer: ${result.correctAnswer}\n`;
+                    emailContent += `Result: ${result.isCorrect ? "Correct" : "Incorrect"}\n`;
+                    
+                    emailContent += `\n${'='.repeat(50)}\n\n`;
+                });
+                // Create a hidden form and submit it to Formspree
+                const form = document.createElement("form");
+                form.method = "POST";
+                form.action = "https://formspree.io/f/mgvypvgr";
+                form.target = "_blank"; // Open in new tab to avoid leaving the quiz
+                
+                const input = document.createElement("input");
+                input.type = "hidden";
+                input.name = "message";
+                input.value = emailContent;
+                form.appendChild(input);
+                
+                document.body.appendChild(form);
+                form.submit();
+                document.body.removeChild(form);
+                
+                // For demonstration, also log to console
+                console.log('=== EMAIL CONTENT ===');
+                console.log(emailContent);
+                console.log('=== END EMAIL ===');
+            }
+            // Restart quiz
+            function restartQuiz() {
+                resultScreen.classList.add("hidden");
+                welcomeScreen.classList.remove("hidden");
+                
+                // Reset form
+                quizForm.reset();
+                
+                // Remove visual selection
+                const options = document.querySelectorAll(".option");
+                options.forEach((option) => {
+                    option.classList.remove("selected");
+                });
+                
+                // Reset timer
+                timeRemaining = examDuration;
+                examStartTime = null;
+                updateTimerDisplay();
+                
+                // Reset progress bar
+                progressBar.style.width = "0%";
+                
+                // Reset timer styling
+                const timerElement = document.querySelector(".timer");
+                timerElement.classList.remove("warning", "danger");
+            }
+            // Event listeners
+            startQuizBtn.addEventListener("click", startQuiz);
+            quizForm.addEventListener("submit", function (e) {
+                e.preventDefault();
+                submitQuiz();
+            });
+            restartQuizBtn.addEventListener("click", restartQuiz);
+            
+            // Check for existing exam on page load
+            checkExistingExam();
+        });
+    </script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</body>
+</html>
