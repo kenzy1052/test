@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MatterQuiz - States of Matter & Periodic Table</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      :root {
+        --primary-color: #c53030;
+        --secondary-color: #e53e3e;
+        --accent-color: #fc8181;
+        --success-color: #38a169;
+        --danger-color: #c53030;
+        --warning-color: #dd6b20;
+        --light-color: #fff5f5;
+        --dark-color: #742a2a;
+        --text-primary: #2d3748;
+        --text-secondary: #4a5568;
+        --border-color: #feb2b2;
+        --bg-primary: #ffffff;
+        --bg-secondary: #fed7d7;
+        --shadow: 0 4px 6px -1px rgba(197, 48, 48, 0.1);
+        --shadow-lg: 0 10px 15px -3px rgba(197, 48, 48, 0.1);
+      }
+
+      body {
+        background: linear-gradient(135deg, #fff5f5 0%, #fed7d7 100%);
+        color: var(--text-primary);
+        line-height: 1.6;
+        min-height: 100vh;
+      }
+
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      header {
+        background: var(--primary-color);
+        color: white;
+        padding: 2rem 0;
+        text-align: center;
+        margin-bottom: 2rem;
+        border-radius: 12px;
+        box-shadow: var(--shadow-lg);
+      }
+
+      .logo {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+      }
+
+      .tagline {
+        font-size: 1.1rem;
+        opacity: 0.9;
+        font-weight: 300;
+      }
+
+      .card {
+        background: var(--bg-primary);
+        border-radius: 12px;
+        box-shadow: var(--shadow);
+        padding: 2rem;
+        margin: 1.5rem 0;
+        border: 1px solid var(--border-color);
+      }
+
+      .btn {
+        display: inline-block;
+        background: var(--primary-color);
+        color: white;
+        padding: 12px 24px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1rem;
+        font-weight: 600;
+        text-align: center;
+        transition: all 0.2s ease;
+        text-decoration: none;
+      }
+
+      .btn:hover {
+        background: var(--secondary-color);
+        transform: translateY(-1px);
+        box-shadow: var(--shadow);
+      }
+
+      .btn-success {
+        background: var(--success-color);
+      }
+
+      .btn-success:hover {
+        background: #2f855a;
+      }
+
+      .timer {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        background: var(--bg-primary);
+        padding: 12px 20px;
+        border-radius: 8px;
+        border: 2px solid var(--border-color);
+        box-shadow: var(--shadow);
+        z-index: 1000;
+      }
+
+      .timer.warning {
+        color: var(--warning-color);
+        border-color: var(--warning-color);
+      }
+
+      .timer.danger {
+        color: var(--danger-color);
+        border-color: var(--danger-color);
+      }
+
+      .progress-container {
+        margin: 1.5rem 0;
+        padding: 1.5rem;
+        background: var(--bg-secondary);
+        border-radius: 8px;
+      }
+
+      .progress-bar {
+        height: 12px;
+        background: var(--border-color);
+        border-radius: 6px;
+        overflow: hidden;
+      }
+
+      .progress {
+        height: 100%;
+        background: var(--primary-color);
+        width: 0%;
+        transition: width 0.3s ease;
+        border-radius: 6px;
+      }
+
+      .question-card {
+        margin-bottom: 2rem;
+        padding: 1.5rem;
+        background: var(--bg-primary);
+        border-radius: 8px;
+        border-left: 4px solid var(--primary-color);
+        box-shadow: var(--shadow);
+      }
+
+      .question-number {
+        font-weight: 600;
+        color: var(--primary-color);
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+      }
+
+      .question-text {
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+        line-height: 1.6;
+        color: var(--text-primary);
+        font-weight: 500;
+      }
+
+      .options {
+        display: grid;
+        gap: 12px;
+        margin-top: 1rem;
+      }
+
+      .option {
+        padding: 12px;
+        border: 2px solid var(--border-color);
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        background: var(--bg-primary);
+      }
+
+      .option:hover {
+        border-color: var(--accent-color);
+        background: var(--light-color);
+      }
+
+      .option.selected {
+        border-color: var(--primary-color);
+        background: #fff5f5;
+        font-weight: 500;
+      }
+
+      .option input[type="radio"] {
+        margin-right: 12px;
+        accent-color: var(--primary-color);
+      }
+
+      .section-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 2rem 0 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid var(--border-color);
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      .result-card {
+        text-align: center;
+        padding: 3rem;
+      }
+
+      .score {
+        font-size: 3rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin: 1rem 0;
+      }
+
+      .score-message {
+        font-size: 1.2rem;
+        margin-bottom: 2rem;
+        color: var(--text-secondary);
+      }
+
+      .welcome-screen {
+        text-align: center;
+      }
+
+      .welcome-screen h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 1rem;
+      }
+
+      .welcome-screen p {
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+        color: var(--text-secondary);
+        line-height: 1.6;
+      }
+
+      .exam-info {
+        display: flex;
+        justify-content: space-around;
+        margin: 2rem 0;
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+
+      .info-item {
+        text-align: center;
+        padding: 1.5rem;
+        background: var(--bg-secondary);
+        border-radius: 8px;
+        min-width: 120px;
+        border: 1px solid var(--border-color);
+      }
+
+      .info-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin-bottom: 0.25rem;
+      }
+
+      .info-label {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+        font-weight: 500;
+        text-transform: uppercase;
+      }
+
+      .instructions {
+        text-align: left;
+        background: var(--bg-secondary);
+        padding: 1.5rem;
+        border-radius: 8px;
+        margin: 1.5rem 0;
+      }
+
+      .instructions h3 {
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+        font-size: 1.2rem;
+        font-weight: 600;
+      }
+
+      .instructions ul {
+        padding-left: 1.5rem;
+      }
+
+      .instructions li {
+        margin-bottom: 0.75rem;
+        color: var(--text-secondary);
+        line-height: 1.5;
+      }
+
+      footer {
+        background: var(--dark-color);
+        color: white;
+        text-align: center;
+        padding: 2rem 0;
+        margin-top: 3rem;
+        border-radius: 12px;
+      }
+
+      footer p {
+        opacity: 0.9;
+      }
+
+      @media (max-width: 768px) {
+        .container {
+          padding: 15px;
+        }
+
+        .card {
+          padding: 1.5rem;
+          margin: 1rem 0;
+        }
+
+        .exam-info {
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .timer {
+          top: 10px;
+          right: 10px;
+          padding: 8px 12px;
+          font-size: 1rem;
+        }
+
+        .welcome-screen h1 {
+          font-size: 2rem;
+        }
+
+        .section-title {
+          font-size: 1.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <div class="logo">
+          <i class="fas fa-atom"></i>
+          MatterQuiz
+        </div>
+        <div class="tagline">Science Assessment Platform</div>
+      </header>
+
+      <!-- Welcome Screen -->
+      <div id="welcome-screen" class="card welcome-screen">
+        <h1>States of Matter & Periodic Table Test</h1>
+        <p>
+          You are about to take a test on states of matter and the periodic
+          table. Please read the instructions carefully before starting.
+        </p>
+
+        <div class="exam-info">
+          <div class="info-item">
+            <div class="info-value">10</div>
+            <div class="info-label">Questions</div>
+          </div>
+          <div class="info-item">
+            <div class="info-value">15</div>
+            <div class="info-label">Minutes</div>
+          </div>
+          <div class="info-item">
+            <div class="info-value">1</div>
+            <div class="info-label">Subject</div>
+          </div>
+        </div>
+
+        <div class="instructions">
+          <h3>Test Instructions</h3>
+          <ul>
+            <li>The test consists of 10 multiple choice questions</li>
+            <li>You have 15 minutes to complete the test</li>
+            <li>The timer will continue even if you refresh the page</li>
+            <li>
+              When time runs out, your test will be automatically submitted
+            </li>
+            <li>Select one answer for each question</li>
+            <li>After submission, you will see your final score</li>
+            <li>Make sure you have a stable internet connection</li>
+          </ul>
+        </div>
+
+        <button id="start-quiz" class="btn">Start Test</button>
+      </div>
+
+      <!-- Quiz Screen -->
+      <div id="quiz-screen" class="hidden">
+        <div class="timer">
+          <i class="fas fa-clock"></i>
+          <span id="time-remaining">15:00</span>
+        </div>
+
+        <div class="progress-container">
+          <div class="progress-bar">
+            <div id="progress" class="progress"></div>
+          </div>
+        </div>
+
+        <form id="quiz-form">
+          <h2 class="section-title">States of Matter & Periodic Table</h2>
+
+          <div class="question-card">
+            <div class="question-number">Question 1</div>
+            <div class="question-text">Which of the following is a liquid?</div>
+            <div class="options">
+              <label class="option">
+                <input type="radio" name="q1" value="A" /> A. Stone
+              </label>
+              <label class="option">
+                <input type="radio" name="q1" value="B" /> B. Water
+              </label>
+              <label class="option">
+                <input type="radio" name="q1" value="C" /> C. Chalk
+              </label>
+              <label class="option">
+                <input type="radio" name="q1" value="D" /> D. Iron
+              </label>
+            </div>
+          </div>
+
+          <div class="question-card">
+            <div class="question-number">Question 2</div>
+            <div class="question-text">
+              Which statement is TRUE about gases?
+            </div>
+            <div class="options">
+              <label class="option">
+                <input type="radio" name="q2" value="A" /> A. They have a fixed
+                shape.
+              </label>
+              <label class="option">
+                <input type="radio" name="q2" value="B" /> B. They cannot be
+                compressed.
+              </label>
+              <label class="option">
+                <input type="radio" name="q2" value="C" /> C. They spread out to
+                fill any space.
+              </label>
+              <label class="option">
+                <input type="radio" name="q2" value="D" /> D. They always remain
+                visible.
+              </label>
+            </div>
+          </div>
+
+          <div class="question-card">
+            <div class="question-number">Question 3</div>
+            <div class="question-text">
+              Salt is a solid. What is its MAIN use in food?
+            </div>
+            <div class="options">
+              <label class="option">
+                <input type="radio" name="q3" value="A" /> A. For washing
+                clothes
+              </label>
+              <label class="option">
+                <input type="radio" name="q3" value="B" /> B. To make food sweet
+              </label>
+              <label class="option">
+                <input type="radio" name="q3" value="C" /> C. To give taste and
+                preserve food
+              </label>
+              <label class="option">
+                <input type="radio" name="q3" value="D" /> D. To make food soft
+              </label>
+            </div>
+          </div>
+
+          <div class="question-card">
+            <div class="question-number">Question 4</div>
+            <div class="question-text">Which of these is a noble gas?</div>
+            <div class="options">
+              <label class="option">
+                <input type="radio" name="q4" value="A" /> A. Oxygen (O)
+              </label>
+              <label class="option">
+                <input type="radio" name="q4" value="B" /> B. Sodium (Na)
+              </label>
+              <label class="option">
+                <input type="radio" name="q4" value="C" /> C. Helium (He)
+              </label>
+              <label class="option">
+                <input type="radio" name="q4" value="D" /> D. Carbon (C)
+              </label>
+            </div>
+          </div>
+
+          <div class="question-card">
+            <div class="question-number">Question 5</div>
+            <div class="question-text">Which element is a metal?</div>
+            <div class="options">
+              <label class="option">
+                <input type="radio" name="q5" value="A" /> A. Sulphur (S)
+              </label>
+              <label class="option">
+                <input type="radio" name="q5" value="B" /> B. Aluminium (Al)
+              </label>
+              <label class="option">
+                <input type="radio" name="q5" value="C" /> C. Oxygen (O)
+              </label>
+              <label class="option">
+                <input type="radio" name="q5" value="D" /> D. Phosphorus (P)
+              </label>
+            </div>
+          </div>
+
+          <div class="question-card">
+            <div class="question-number">Question 6</div>
+            <div class="question-text">
+              Which of the following best explains why liquids take the shape of
+              their container?
+            </div>
+            <div class="options">
+              <label class="option">
+                <input type="radio" name="q6" value="A" /> A. Their particles
+                are tightly packed and cannot move.
+              </label>
+              <label class="option">
+                <input type="radio" name="q6" value="B" /> B. Their particles
+                move freely but remain close together.
+              </label>
+              <label class="option">
+                <input type="radio" name="q6" value="C" /> C. Their particles
+                are far apart and move very fast.
+              </label>
+              <label class="option">
+                <input type="radio" name="q6" value="D" /> D. Their particles
+                have no mass.
+              </label>
+            </div>
+          </div>
+
+          <div class="question-card">
+            <div class="question-number">Question 7</div>
+            <div class="question-text">
+              Which of these sets contains ONLY non-metals?
+            </div>
+            <div class="options">
+              <label class="option">
+                <input type="radio" name="q7" value="A" /> A. Carbon, Oxygen,
+                Nitrogen
+              </label>
+              <label class="option">
+                <input type="radio" name="q7" value="B" /> B. Sodium, Potassium,
+                Magnesium
+              </label>
+              <label class="option">
+                <input type="radio" name="q7" value="C" /> C. Neon, Helium,
+                Argon
+              </label>
+              <label class="option">
+                <input type="radio" name="q7" value="D" /> D. Aluminium,
+                Calcium, Iron
+              </label>
+            </div>
+          </div>
+
+          <div class="question-card">
+            <div class="question-number">Question 8</div>
+            <div class="question-text">
+              Which of these BEST shows why gases can be compressed easily
+              compared to solids and liquids?
+            </div>
+            <div class="options">
+              <label class="option">
+                <input type="radio" name="q8" value="A" /> A. Gas particles are
+                packed very close together.
+              </label>
+              <label class="option">
+                <input type="radio" name="q8" value="B" /> B. Gas particles are
+                widely spaced with empty space between them.
+              </label>
+              <label class="option">
+                <input type="radio" name="q8" value="C" /> C. Gas particles are
+                larger than solid particles.
+              </label>
+              <label class="option">
+                <input type="radio" name="q8" value="D" /> D. Gas particles do
+                not move at all.
+              </label>
+            </div>
+          </div>
+
+          <div class="question-card">
+            <div class="question-number">Question 9</div>
+            <div class="question-text">
+              If the cost of petrol (a liquid) increases, which of the following
+              is MOST directly affected?
+            </div>
+            <div class="options">
+              <label class="option">
+                <input type="radio" name="q9" value="A" /> A. Building houses
+                with cement
+              </label>
+              <label class="option">
+                <input type="radio" name="q9" value="B" /> B. Cooking with
+                charcoal
+              </label>
+              <label class="option">
+                <input type="radio" name="q9" value="C" /> C. Transport of goods
+                and people
+              </label>
+              <label class="option">
+                <input type="radio" name="q9" value="D" /> D. Drinking water at
+                home
+              </label>
+            </div>
+          </div>
+
+          <div class="question-card">
+            <div class="question-number">Question 10</div>
+            <div class="question-text">
+              Which of the following statements about the periodic table is
+              CORRECT?
+            </div>
+            <div class="options">
+              <label class="option">
+                <input type="radio" name="q10" value="A" /> A. Elements are
+                arranged by alphabetical order.
+              </label>
+              <label class="option">
+                <input type="radio" name="q10" value="B" /> B. Elements in the
+                same group have similar properties.
+              </label>
+              <label class="option">
+                <input type="radio" name="q10" value="C" /> C. All gases are
+                found in the first 20 elements.
+              </label>
+              <label class="option">
+                <input type="radio" name="q10" value="D" /> D. Non-metals and
+                metals cannot be on the same table.
+              </label>
+            </div>
+          </div>
+
+          <div style="text-align: center; margin-top: 2rem">
+            <button type="submit" class="btn btn-success">Submit Test</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Result Screen -->
+      <div id="result-screen" class="card result-card hidden">
+        <h1>Test Completed!</h1>
+        <div class="score" id="score-display">0/10 (0%)</div>
+        <div class="score-message" id="score-message">
+          Thank you for completing the test.
+        </div>
+        <p>A detailed review has been sent to the instructor.</p>
+        <button id="restart-quiz" class="btn">Take Test Again</button>
+      </div>
+
+      <footer>
+        <p>Made with care by MatterQuiz</p>
+        <p>&copy; 2025 MatterQuiz Assessment Platform. All rights reserved.</p>
+      </footer>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // DOM Elements
+        const welcomeScreen = document.getElementById("welcome-screen");
+        const quizScreen = document.getElementById("quiz-screen");
+        const resultScreen = document.getElementById("result-screen");
+        const startQuizBtn = document.getElementById("start-quiz");
+        const quizForm = document.getElementById("quiz-form");
+        const restartQuizBtn = document.getElementById("restart-quiz");
+        const timeRemainingElement = document.getElementById("time-remaining");
+        const progressBar = document.getElementById("progress");
+        const scoreDisplay = document.getElementById("score-display");
+        const scoreMessage = document.getElementById("score-message");
+
+        // Timer variables
+        let examDuration = 12 * 60; // 12 minutes in seconds
+        let timeRemaining = examDuration;
+        let examStartTime;
+        let timerInterval;
+
+        // Correct answers
+        const correctAnswers = {
+          q1: "B",
+          q2: "C",
+          q3: "C",
+          q4: "C",
+          q5: "B",
+          q6: "B",
+          q7: "A",
+          q8: "B",
+          q9: "C",
+          q10: "B",
+        };
+
+        // Question texts for email report
+        const questionTexts = {
+          q1: "Which of the following is a liquid?",
+          q2: "Which statement is TRUE about gases?",
+          q3: "Salt is a solid. What is its MAIN use in food?",
+          q4: "Which of these is a noble gas?",
+          q5: "Which element is a metal?",
+          q6: "Which of the following best explains why liquids take the shape of their container?",
+          q7: "Which of these sets contains ONLY non-metals?",
+          q8: "Which of these BEST shows why gases can be compressed easily compared to solids and liquids?",
+          q9: "If the cost of petrol (a liquid) increases, which of the following is MOST directly affected?",
+          q10: "Which of the following statements about the periodic table is CORRECT?",
+        };
+
+        // Option texts for email report
+        const optionTexts = {
+          q1: {
+            A: "A. Stone",
+            B: "B. Water",
+            C: "C. Chalk",
+            D: "D. Iron",
+          },
+          q2: {
+            A: "A. They have a fixed shape.",
+            B: "B. They cannot be compressed.",
+            C: "C. They spread out to fill any space.",
+            D: "D. They always remain visible.",
+          },
+          q3: {
+            A: "A. For washing clothes",
+            B: "B. To make food sweet",
+            C: "C. To give taste and preserve food",
+            D: "D. To make food soft",
+          },
+          q4: {
+            A: "A. Oxygen (O)",
+            B: "B. Sodium (Na)",
+            C: "C. Helium (He)",
+            D: "D. Carbon (C)",
+          },
+          q5: {
+            A: "A. Sulphur (S)",
+            B: "B. Aluminium (Al)",
+            C: "C. Oxygen (O)",
+            D: "D. Phosphorus (P)",
+          },
+          q6: {
+            A: "A. Their particles are tightly packed and cannot move.",
+            B: "B. Their particles move freely but remain close together.",
+            C: "C. Their particles are far apart and move very fast.",
+            D: "D. Their particles have no mass.",
+          },
+          q7: {
+            A: "A. Carbon, Oxygen, Nitrogen",
+            B: "B. Sodium, Potassium, Magnesium",
+            C: "C. Neon, Helium, Argon",
+            D: "D. Aluminium, Calcium, Iron",
+          },
+          q8: {
+            A: "A. Gas particles are packed very close together.",
+            B: "B. Gas particles are widely spaced with empty space between them.",
+            C: "C. Gas particles are larger than solid particles.",
+            D: "D. Gas particles do not move at all.",
+          },
+          q9: {
+            A: "A. Building houses with cement",
+            B: "B. Cooking with charcoal",
+            C: "C. Transport of goods and people",
+            D: "D. Drinking water at home",
+          },
+          q10: {
+            A: "A. Elements are arranged by alphabetical order.",
+            B: "B. Elements in the same group have similar properties.",
+            C: "C. All gases are found in the first 20 elements.",
+            D: "D. Non-metals and metals cannot be on the same table.",
+          },
+        };
+
+        // Check if exam was already started
+        function checkExistingExam() {
+          const savedStartTime = localStorage.getItem("examStartTime");
+          if (savedStartTime) {
+            const startTime = new Date(savedStartTime);
+            const currentTime = new Date();
+            const elapsedTime = Math.floor((currentTime - startTime) / 1000);
+            if (elapsedTime < examDuration) {
+              examStartTime = startTime;
+              timeRemaining = examDuration - elapsedTime;
+              startQuiz();
+            } else {
+              localStorage.removeItem("examStartTime");
+            }
+          }
+        }
+
+        // Start the quiz
+        function startQuiz() {
+          welcomeScreen.classList.add("hidden");
+          quizScreen.classList.remove("hidden");
+
+          // If it's a new exam, save start time
+          if (!examStartTime) {
+            examStartTime = new Date();
+            localStorage.setItem("examStartTime", examStartTime);
+          }
+
+          // Start timer
+          updateTimerDisplay();
+          timerInterval = setInterval(updateTimer, 1000);
+
+          // Restore saved answers if any
+          restoreAnswers();
+
+          // Add event listeners to options
+          const options = document.querySelectorAll(".option");
+          options.forEach((option) => {
+            option.addEventListener("click", function () {
+              const radio = this.querySelector('input[type="radio"]');
+              if (radio) {
+                radio.checked = true;
+                // Update visual selection
+                const questionCard = this.closest(".question-card");
+                const allOptions = questionCard.querySelectorAll(".option");
+                allOptions.forEach((opt) => opt.classList.remove("selected"));
+                this.classList.add("selected");
+                // Save answer to localStorage
+                saveAnswers();
+                updateProgress();
+              }
+            });
+          });
+
+          updateProgress();
+        }
+
+        // Update timer
+        function updateTimer() {
+          timeRemaining--;
+          updateTimerDisplay();
+          if (timeRemaining <= 0) {
+            clearInterval(timerInterval);
+            submitQuiz(true); // Auto-submit when time runs out
+          }
+        }
+
+        // Update timer display
+        function updateTimerDisplay() {
+          const minutes = Math.floor(timeRemaining / 60);
+          const seconds = timeRemaining % 60;
+          timeRemainingElement.textContent = `${minutes}:${
+            seconds < 10 ? "0" : ""
+          }${seconds}`;
+
+          // Update timer styling based on time remaining
+          const timerElement = document.querySelector(".timer");
+          timerElement.classList.remove("warning", "danger");
+          if (timeRemaining <= 60) {
+            timerElement.classList.add("danger");
+          } else if (timeRemaining <= 300) {
+            timerElement.classList.add("warning");
+          }
+        }
+
+        // Update progress bar
+        function updateProgress() {
+          const totalQuestions = Object.keys(correctAnswers).length;
+          const answeredQuestions = document.querySelectorAll(
+            'input[type="radio"]:checked'
+          ).length;
+          const progressPercentage = (answeredQuestions / totalQuestions) * 100;
+          progressBar.style.width = `${progressPercentage}%`;
+        }
+
+        // Save answers to localStorage
+        function saveAnswers() {
+          const formData = new FormData(quizForm);
+          const answers = {};
+          for (let [key, value] of formData.entries()) {
+            answers[key] = value;
+          }
+          localStorage.setItem("quizAnswers", JSON.stringify(answers));
+        }
+
+        // Restore answers from localStorage
+        function restoreAnswers() {
+          const savedAnswers = localStorage.getItem("quizAnswers");
+          if (savedAnswers) {
+            const answers = JSON.parse(savedAnswers);
+            for (let [questionId, answer] of Object.entries(answers)) {
+              const radio = document.querySelector(
+                `input[name="${questionId}"][value="${answer}"]`
+              );
+              if (radio) {
+                radio.checked = true;
+                // Update visual selection
+                const option = radio.closest(".option");
+                if (option) {
+                  option.classList.add("selected");
+                }
+              }
+            }
+            updateProgress();
+          }
+        }
+
+        // Submit quiz
+        function submitQuiz(isAutoSubmit = false) {
+          clearInterval(timerInterval);
+          const formData = new FormData(quizForm);
+          const answers = {};
+          for (let [key, value] of formData.entries()) {
+            answers[key] = value;
+          }
+
+          // Calculate score
+          let score = 0;
+          const results = [];
+          for (let [questionId, correctAnswer] of Object.entries(
+            correctAnswers
+          )) {
+            const studentAnswer = answers[questionId];
+            const isCorrect = studentAnswer === correctAnswer;
+            if (isCorrect) {
+              score++;
+            }
+            results.push({
+              questionId,
+              question: questionTexts[questionId],
+              studentAnswer: studentAnswer || "Not answered",
+              correctAnswer: optionTexts[questionId][correctAnswer],
+              isCorrect,
+              options: Object.values(optionTexts[questionId]),
+            });
+          }
+
+          const percentage = Math.round(
+            (score / Object.keys(correctAnswers).length) * 100
+          );
+
+          // Display results to student
+          displayResults(score, percentage);
+
+          // Send detailed results to email
+          sendResultsToEmail(results, score, percentage, isAutoSubmit);
+
+          // Clear localStorage
+          localStorage.removeItem("examStartTime");
+          localStorage.removeItem("quizAnswers");
+        }
+
+        // Display results to student
+        function displayResults(score, percentage) {
+          // Set message based on score
+          if (percentage >= 80) {
+            scoreMessage.textContent =
+              "Excellent work! You have a strong understanding of states of matter and the periodic table.";
+          } else if (percentage >= 60) {
+            scoreMessage.textContent =
+              "Good job! You demonstrate solid knowledge of these science concepts.";
+          } else if (percentage >= 40) {
+            scoreMessage.textContent =
+              "Fair effort! Review the material to strengthen your understanding.";
+          } else {
+            scoreMessage.textContent =
+              "Keep studying! Focus on the key concepts and try again.";
+          }
+
+          // Show result screen
+          quizScreen.classList.add("hidden");
+          resultScreen.classList.remove("hidden");
+          scoreDisplay.textContent = `${score}/${
+            Object.keys(correctAnswers).length
+          } (${percentage}%)`;
+        }
+
+        // Send results to email via Formspree
+        function sendResultsToEmail(results, score, percentage, isAutoSubmit) {
+          // Create email content
+          let emailContent = `MatterQuiz States of Matter & Periodic Table Test Results\n\n`;
+          emailContent += `Student Score: ${score}/${
+            Object.keys(correctAnswers).length
+          } (${percentage}%)\n`;
+          emailContent += `Submission Type: ${
+            isAutoSubmit ? "Auto-submitted (time expired)" : "Manual submission"
+          }\n`;
+          emailContent += `Submission Time: ${new Date().toLocaleString()}\n\n`;
+          emailContent += `Detailed Results:\n\n`;
+
+          results.forEach((result) => {
+            emailContent += `Question ${result.questionId.substring(1)}: ${
+              result.question
+            }\n\n`;
+
+            emailContent += `Options:\n`;
+            result.options.forEach((option) => {
+              emailContent += `${option}\n`;
+            });
+            emailContent += `\n`;
+
+            emailContent += `Student's Answer: ${result.studentAnswer}\n`;
+            emailContent += `Correct Answer: ${result.correctAnswer}\n`;
+            emailContent += `Result: ${
+              result.isCorrect ? "Correct" : "Incorrect"
+            }\n`;
+
+            emailContent += `\n${"=".repeat(50)}\n\n`;
+          });
+
+          // Create a hidden form and submit it to Formspree
+          const form = document.createElement("form");
+          form.method = "POST";
+          form.action = "https://formspree.io/f/mgvypvgr";
+          form.target = "_blank";
+
+          const input = document.createElement("input");
+          input.type = "hidden";
+          input.name = "message";
+          input.value = emailContent;
+          form.appendChild(input);
+
+          document.body.appendChild(form);
+          form.submit();
+          document.body.removeChild(form);
+
+          // For demonstration, also log to console
+          console.log("=== EMAIL CONTENT ===");
+          console.log(emailContent);
+          console.log("=== END EMAIL ===");
+        }
+
+        // Restart quiz
+        function restartQuiz() {
+          resultScreen.classList.add("hidden");
+          welcomeScreen.classList.remove("hidden");
+
+          // Reset form
+          quizForm.reset();
+
+          // Remove visual selection
+          const options = document.querySelectorAll(".option");
+          options.forEach((option) => {
+            option.classList.remove("selected");
+          });
+
+          // Reset timer
+          timeRemaining = examDuration;
+          examStartTime = null;
+          updateTimerDisplay();
+
+          // Reset progress bar
+          progressBar.style.width = "0%";
+
+          // Reset timer styling
+          const timerElement = document.querySelector(".timer");
+          timerElement.classList.remove("warning", "danger");
+        }
+
+        // Event listeners
+        startQuizBtn.addEventListener("click", startQuiz);
+        quizForm.addEventListener("submit", function (e) {
+          e.preventDefault();
+          submitQuiz();
+        });
+        restartQuizBtn.addEventListener("click", restartQuiz);
+
+        // Check for existing exam on page load
+        checkExistingExam();
+      });
+    </script>
+
+    <!-- Font Awesome for icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </body>
+</html>
