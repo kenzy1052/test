@@ -13,29 +13,29 @@
       }
 
       :root {
-        --primary-color: #8b0000;
-        --secondary-color: #a52a2a;
-        --accent-color: #cd5c5c;
-        --success-color: #2e8b57;
-        --danger-color: #b22222;
-        --warning-color: #d2691e;
-        --light-color: #fff8f8;
-        --dark-color: #660000;
+        --primary-color: #6a0dad;
+        --secondary-color: #8a2be2;
+        --accent-color: #9370db;
+        --success-color: #20b2aa;
+        --danger-color: #8b008b;
+        --warning-color: #ff8c00;
+        --light-color: #f8f0fc;
+        --dark-color: #4b0082;
         --text-primary: #333333;
         --text-secondary: #555555;
-        --border-color: #e9967a;
+        --border-color: #dda0dd;
         --bg-primary: #ffffff;
-        --bg-secondary: #fff0f0;
-        --shadow: 0 4px 6px -1px rgba(139, 0, 0, 0.15);
-        --shadow-lg: 0 10px 15px -3px rgba(139, 0, 0, 0.15);
+        --bg-secondary: #f3e5f5;
+        --shadow: 0 4px 6px -1px rgba(106, 13, 173, 0.15);
+        --shadow-lg: 0 10px 15px -3px rgba(106, 13, 173, 0.15);
       }
 
       body {
         background: linear-gradient(
           135deg,
-          #fff0f0 0%,
-          #ffe4e4 50%,
-          #ffd6d6 100%
+          #f3e5f5 0%,
+          #e1bee7 50%,
+          #ce93d8 100%
         );
         color: var(--text-primary);
         line-height: 1.6;
@@ -121,7 +121,7 @@
       }
 
       .btn-success:hover {
-        background: #2f855a;
+        background: #1a9999;
       }
 
       .timer {
@@ -222,7 +222,7 @@
 
       .option.selected {
         border-color: var(--primary-color);
-        background: #fff0f0;
+        background: #f3e5f5;
         font-weight: 500;
       }
 
@@ -947,6 +947,9 @@
           },
         };
 
+        // Clear any saved answers when page loads
+        localStorage.removeItem("quizAnswers");
+
         // Check if exam was already started
         function checkExistingExam() {
           const savedStartTime = localStorage.getItem("examStartTime");
@@ -969,6 +972,9 @@
           welcomeScreen.classList.add("hidden");
           quizScreen.classList.remove("hidden");
 
+          // Scroll to top of the page
+          window.scrollTo(0, 0);
+
           // If it's a new exam, save start time
           if (!examStartTime) {
             examStartTime = new Date();
@@ -978,6 +984,16 @@
           // Start timer
           updateTimerDisplay();
           timerInterval = setInterval(updateTimer, 1000);
+
+          // Clear any saved answers for new quiz
+          if (!localStorage.getItem("quizAnswers")) {
+            quizForm.reset();
+            // Remove visual selection
+            const options = document.querySelectorAll(".option");
+            options.forEach((option) => {
+              option.classList.remove("selected");
+            });
+          }
 
           // Restore saved answers if any
           restoreAnswers();
