@@ -1,0 +1,1248 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MatterQuiz - Periodic Table Test</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      :root {
+        --primary-color: #8b0000;
+        --secondary-color: #a52a2a;
+        --accent-color: #cd5c5c;
+        --success-color: #2e8b57;
+        --danger-color: #b22222;
+        --warning-color: #d2691e;
+        --light-color: #fff8f8;
+        --dark-color: #660000;
+        --text-primary: #333333;
+        --text-secondary: #555555;
+        --border-color: #e9967a;
+        --bg-primary: #ffffff;
+        --bg-secondary: #fff0f0;
+        --shadow: 0 4px 6px -1px rgba(139, 0, 0, 0.15);
+        --shadow-lg: 0 10px 15px -3px rgba(139, 0, 0, 0.15);
+      }
+
+      body {
+        background: linear-gradient(
+          135deg,
+          #fff0f0 0%,
+          #ffe4e4 50%,
+          #ffd6d6 100%
+        );
+        color: var(--text-primary);
+        line-height: 1.6;
+        min-height: 100vh;
+      }
+
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      header {
+        background: linear-gradient(
+          135deg,
+          var(--primary-color) 0%,
+          var(--secondary-color) 100%
+        );
+        color: white;
+        padding: 2rem 0;
+        text-align: center;
+        margin-bottom: 2rem;
+        border-radius: 12px;
+        box-shadow: var(--shadow-lg);
+      }
+
+      .logo {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+      }
+
+      .tagline {
+        font-size: 1.1rem;
+        opacity: 0.9;
+        font-weight: 300;
+      }
+
+      .card {
+        background: var(--bg-primary);
+        border-radius: 12px;
+        box-shadow: var(--shadow);
+        padding: 2rem;
+        margin: 1.5rem 0;
+        border: 1px solid var(--border-color);
+      }
+
+      .btn {
+        display: inline-block;
+        background: linear-gradient(
+          135deg,
+          var(--primary-color) 0%,
+          var(--secondary-color) 100%
+        );
+        color: white;
+        padding: 12px 24px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1rem;
+        font-weight: 600;
+        text-align: center;
+        transition: all 0.2s ease;
+        text-decoration: none;
+      }
+
+      .btn:hover {
+        background: linear-gradient(
+          135deg,
+          var(--secondary-color) 0%,
+          var(--accent-color) 100%
+        );
+        transform: translateY(-1px);
+        box-shadow: var(--shadow);
+      }
+
+      .btn-success {
+        background: var(--success-color);
+      }
+
+      .btn-success:hover {
+        background: #2f855a;
+      }
+
+      .timer {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        background: var(--bg-primary);
+        padding: 12px 20px;
+        border-radius: 8px;
+        border: 2px solid var(--border-color);
+        box-shadow: var(--shadow);
+        z-index: 1000;
+      }
+
+      .timer.warning {
+        color: var(--warning-color);
+        border-color: var(--warning-color);
+      }
+
+      .timer.danger {
+        color: var(--danger-color);
+        border-color: var(--danger-color);
+      }
+
+      .progress-container {
+        margin: 1.5rem 0;
+        padding: 1.5rem;
+        background: var(--bg-secondary);
+        border-radius: 8px;
+      }
+
+      .progress-bar {
+        height: 12px;
+        background: var(--border-color);
+        border-radius: 6px;
+        overflow: hidden;
+      }
+
+      .progress {
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          var(--primary-color) 0%,
+          var(--secondary-color) 100%
+        );
+        width: 0%;
+        transition: width 0.3s ease;
+        border-radius: 6px;
+      }
+
+      .question-card {
+        margin-bottom: 2rem;
+        padding: 1.5rem;
+        background: var(--bg-primary);
+        border-radius: 8px;
+        border-left: 4px solid var(--primary-color);
+        box-shadow: var(--shadow);
+      }
+
+      .question-number {
+        font-weight: 600;
+        color: var(--primary-color);
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+      }
+
+      .question-text {
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+        line-height: 1.6;
+        color: var(--text-primary);
+        font-weight: 500;
+      }
+
+      .options {
+        display: grid;
+        gap: 12px;
+        margin-top: 1rem;
+      }
+
+      .option {
+        padding: 12px;
+        border: 2px solid var(--border-color);
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        background: var(--bg-primary);
+      }
+
+      .option:hover {
+        border-color: var(--accent-color);
+        background: var(--light-color);
+      }
+
+      .option.selected {
+        border-color: var(--primary-color);
+        background: #fff0f0;
+        font-weight: 500;
+      }
+
+      .option input[type="radio"] {
+        margin-right: 12px;
+        accent-color: var(--primary-color);
+      }
+
+      .section-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 2rem 0 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid var(--border-color);
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      .result-card {
+        text-align: center;
+        padding: 3rem;
+      }
+
+      .score {
+        font-size: 3rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin: 1rem 0;
+      }
+
+      .score-message {
+        font-size: 1.2rem;
+        margin-bottom: 2rem;
+        color: var(--text-secondary);
+      }
+
+      .welcome-screen {
+        text-align: center;
+      }
+
+      .welcome-screen h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 1rem;
+      }
+
+      .welcome-screen p {
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+        color: var(--text-secondary);
+        line-height: 1.6;
+      }
+
+      .exam-info {
+        display: flex;
+        justify-content: space-around;
+        margin: 2rem 0;
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+
+      .info-item {
+        text-align: center;
+        padding: 1.5rem;
+        background: var(--bg-secondary);
+        border-radius: 8px;
+        min-width: 120px;
+        border: 1px solid var(--border-color);
+      }
+
+      .info-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin-bottom: 0.25rem;
+      }
+
+      .info-label {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+        font-weight: 500;
+        text-transform: uppercase;
+      }
+
+      .instructions {
+        text-align: left;
+        background: var(--bg-secondary);
+        padding: 1.5rem;
+        border-radius: 8px;
+        margin: 1.5rem 0;
+      }
+
+      .instructions h3 {
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+        font-size: 1.2rem;
+        font-weight: 600;
+      }
+
+      .instructions ul {
+        padding-left: 1.5rem;
+      }
+
+      .instructions li {
+        margin-bottom: 0.75rem;
+        color: var(--text-secondary);
+        line-height: 1.5;
+      }
+
+      footer {
+        background: linear-gradient(
+          135deg,
+          var(--dark-color) 0%,
+          var(--primary-color) 100%
+        );
+        color: white;
+        text-align: center;
+        padding: 2rem 0;
+        margin-top: 3rem;
+        border-radius: 12px;
+      }
+
+      footer p {
+        opacity: 0.9;
+      }
+
+      @media (max-width: 768px) {
+        .container {
+          padding: 15px;
+        }
+
+        .card {
+          padding: 1.5rem;
+          margin: 1rem 0;
+        }
+
+        .exam-info {
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .timer {
+          top: 10px;
+          right: 10px;
+          padding: 8px 12px;
+          font-size: 1rem;
+        }
+
+        .welcome-screen h1 {
+          font-size: 2rem;
+        }
+
+        .section-title {
+          font-size: 1.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <div class="logo">
+          <i class="fas fa-atom"></i>
+          MatterQuiz
+        </div>
+        <div class="tagline">Science Assessment Platform</div>
+      </header>
+
+      <!-- Welcome Screen -->
+      <div id="welcome-screen" class="card welcome-screen">
+        <h1>Periodic Table Test</h1>
+        <p>
+          You are about to take a test on the periodic table. Please read the
+          instructions carefully before starting.
+        </p>
+
+        <div class="exam-info">
+          <div class="info-item">
+            <div class="info-value">15</div>
+            <div class="info-label">Questions</div>
+          </div>
+          <div class="info-item">
+            <div class="info-value">10</div>
+            <div class="info-label">Minutes</div>
+          </div>
+          <div class="info-item">
+            <div class="info-value">1</div>
+            <div class="info-label">Subject</div>
+          </div>
+        </div>
+
+        <div class="instructions">
+          <h3>Test Instructions</h3>
+          <ul>
+            <li>The test consists of 15 multiple choice questions</li>
+            <li>You have 10 minutes to complete the test</li>
+            <li>The timer will continue even if you refresh the page</li>
+            <li>
+              When time runs out, your test will be automatically submitted
+            </li>
+            <li>Select one answer for each question</li>
+            <li>After submission, you will see your final score</li>
+            <li>Make sure you have a stable internet connection</li>
+          </ul>
+        </div>
+
+        <button id="start-quiz" class="btn">Start Test</button>
+      </div>
+
+      <!-- Quiz Screen -->
+      <div id="quiz-screen" class="hidden">
+        <div class="timer">
+          <i class="fas fa-clock"></i>
+          <span id="time-remaining">10:00</span>
+        </div>
+
+        <div class="progress-container">
+          <div class="progress-bar">
+            <div id="progress" class="progress"></div>
+          </div>
+        </div>
+
+        <form id="quiz-form">
+          <h2 class="section-title">Periodic Table</h2>
+
+          <div class="question-card">
+            <div class="question-number">Question 1</div>
+            <div class="question-text">
+              Which is the first element in the periodic table?
+            </div>
+            <div class="options">
+              <label class="option">
+                <input type="radio" name="q1" value="A" /> A. Helium (He)
+              </label>
+              <label class="option">
+                <input type="radio" name="q1" value="B" /> B. Hydrogen (H)
+              </label>
+              <label class="option">
+                <input type="radio" name="q1" value="C" /> C. Lithium (Li)
+              </label>
+              <label class="option">
+                <input type="radio" name="q1" value="D" /> D. Carbon (C)
+              </label>
+            </div>
+          </div>
+
+          <div class="question-card">
+            <div class="question-number">Question 2</div>
+            <div class="question-text">Which element has the symbol "Na"?</div>
+            <div class="options">
+              <label class="option">
+                <input type="radio" name="q2" value="A" /> A. Nitrogen
+              </label>
+              <label class="option">
+                <input type="radio" name="q2" value="B" /> B. Sodium
+              </label>
+              <label class="option">
+                <input type="radio" name="q2" value="C" /> C. Neon
+              </label>
+              <label class="option">
+                <input type="radio" name="q2" value="D" /> D. Nickel
+              </label>
+            </div>
+          </div>
+
+          <div class="question-card">
+            <div class="question-number">Question 3</div>
+            <div class="question-text">
+              Which of the following is a noble gas?
+            </div>
+            <div class="options">
+              <label class="option">
+                <input type="radio" name="q3" value="A" /> A. Oxygen (O)
+              </label>
+              <label class="option">
+                <input type="radio" name="q3" value="B" /> B. Neon (Ne)
+              </label>
+              <label class="option">
+                <input type="radio" name="q3" value="C" /> C. Magnesium (Mg)
+              </label>
+              <label class="option">
+                <input type="radio" name="q3" value="D" /> D. Sulphur (S)
+              </label>
+            </div>
+          </div>
+
+          <div class="question-card">
+            <div class="question-number">Question 4</div>
+            <div class="question-text">Which of these is a metal?</div>
+            <div class="options">
+              <label class="option">
+                <input type="radio" name="q4" value="A" /> A. Carbon (C)
+              </label>
+              <label class="option">
+                <input type="radio" name="q4" value="B" /> B. Phosphorus (P)
+              </label>
+              <label class="option">
+                <input type="radio" name="q4" value="C" /> C. Aluminium (Al)
+              </label>
+              <label class="option">
+                <input type="radio" name="q4" value="D" /> D. Oxygen (O)
+              </label>
+            </div>
+          </div>
+
+          <div class="question-card">
+            <div class="question-number">Question 5</div>
+            <div class="question-text">What is the symbol for Potassium?</div>
+            <div class="options">
+              <label class="option">
+                <input type="radio" name="q5" value="A" /> A. P
+              </label>
+              <label class="option">
+                <input type="radio" name="q5" value="B" /> B. Po
+              </label>
+              <label class="option">
+                <input type="radio" name="q5" value="C" /> C. K
+              </label>
+              <label class="option">
+                <input type="radio" name="q5" value="D" /> D. Pt
+              </label>
+            </div>
+          </div>
+
+          <div class="question-card">
+            <div class="question-number">Question 6</div>
+            <div class="question-text">
+              What is the 12th element in the periodic table?
+            </div>
+            <div class="options">
+              <label class="option">
+                <input type="radio" name="q6" value="A" /> A. Sodium (Na)
+              </label>
+              <label class="option">
+                <input type="radio" name="q6" value="B" /> B. Magnesium (Mg)
+              </label>
+              <label class="option">
+                <input type="radio" name="q6" value="C" /> C. Aluminium (Al)
+              </label>
+              <label class="option">
+                <input type="radio" name="q6" value="D" /> D. Phosphorus (P)
+              </label>
+            </div>
+          </div>
+
+          <div class="question-card">
+            <div class="question-number">Question 7</div>
+            <div class="question-text">
+              Which pair contains ONLY noble gases?
+            </div>
+            <div class="options">
+              <label class="option">
+                <input type="radio" name="q7" value="A" /> A. Helium, Neon
+              </label>
+              <label class="option">
+                <input type="radio" name="q7" value="B" /> B. Sodium, Magnesium
+              </label>
+              <label class="option">
+                <input type="radio" name="q7" value="C" /> C. Hydrogen, Oxygen
+              </label>
+              <label class="option">
+                <input type="radio" name="q7" value="D" /> D. Phosphorus,
+                Sulphur
+              </label>
+            </div>
+          </div>
+
+          <div class="question-card">
+            <div class="question-number">Question 8</div>
+            <div class="question-text">
+              Which of the following is a non-metal?
+            </div>
+            <div class="options">
+              <label class="option">
+                <input type="radio" name="q8" value="A" /> A. Magnesium (Mg)
+              </label>
+              <label class="option">
+                <input type="radio" name="q8" value="B" /> B. Oxygen (O)
+              </label>
+              <label class="option">
+                <input type="radio" name="q8" value="C" /> C. Potassium (K)
+              </label>
+              <label class="option">
+                <input type="radio" name="q8" value="D" /> D. Aluminium (Al)
+              </label>
+            </div>
+          </div>
+
+          <div class="question-card">
+            <div class="question-number">Question 9</div>
+            <div class="question-text">Which element has atomic number 20?</div>
+            <div class="options">
+              <label class="option">
+                <input type="radio" name="q9" value="A" /> A. Calcium (Ca)
+              </label>
+              <label class="option">
+                <input type="radio" name="q9" value="B" /> B. Argon (Ar)
+              </label>
+              <label class="option">
+                <input type="radio" name="q9" value="C" /> C. Potassium (K)
+              </label>
+              <label class="option">
+                <input type="radio" name="q9" value="D" /> D. Sulphur (S)
+              </label>
+            </div>
+          </div>
+
+          <div class="question-card">
+            <div class="question-number">Question 10</div>
+            <div class="question-text">
+              What is the chemical symbol for the element with atomic number 17?
+            </div>
+            <div class="options">
+              <label class="option">
+                <input type="radio" name="q10" value="A" /> A. C
+              </label>
+              <label class="option">
+                <input type="radio" name="q10" value="B" /> B. Cl
+              </label>
+              <label class="option">
+                <input type="radio" name="q10" value="C" /> C. Ca
+              </label>
+              <label class="option">
+                <input type="radio" name="q10" value="D" /> D. Cr
+              </label>
+            </div>
+          </div>
+
+          <div class="question-card">
+            <div class="question-number">Question 11</div>
+            <div class="question-text">
+              Which two elements are gases we breathe in and out?
+            </div>
+            <div class="options">
+              <label class="option">
+                <input type="radio" name="q11" value="A" /> A. Nitrogen and
+                Oxygen
+              </label>
+              <label class="option">
+                <input type="radio" name="q11" value="B" /> B. Sodium and
+                Potassium
+              </label>
+              <label class="option">
+                <input type="radio" name="q11" value="C" /> C. Magnesium and
+                Aluminium
+              </label>
+              <label class="option">
+                <input type="radio" name="q11" value="D" /> D. Carbon and
+                Calcium
+              </label>
+            </div>
+          </div>
+
+          <div class="question-card">
+            <div class="question-number">Question 12</div>
+            <div class="question-text">
+              Which element is the 8th in the periodic table?
+            </div>
+            <div class="options">
+              <label class="option">
+                <input type="radio" name="q12" value="A" /> A. Oxygen (O)
+              </label>
+              <label class="option">
+                <input type="radio" name="q12" value="B" /> B. Nitrogen (N)
+              </label>
+              <label class="option">
+                <input type="radio" name="q12" value="C" /> C. Fluorine (F)
+              </label>
+              <label class="option">
+                <input type="radio" name="q12" value="D" /> D. Neon (Ne)
+              </label>
+            </div>
+          </div>
+
+          <div class="question-card">
+            <div class="question-number">Question 13</div>
+            <div class="question-text">
+              What is the symbol of the element with atomic number 19?
+            </div>
+            <div class="options">
+              <label class="option">
+                <input type="radio" name="q13" value="A" /> A. P
+              </label>
+              <label class="option">
+                <input type="radio" name="q13" value="B" /> B. K
+              </label>
+              <label class="option">
+                <input type="radio" name="q13" value="C" /> C. Ca
+              </label>
+              <label class="option">
+                <input type="radio" name="q13" value="D" /> D. Kr
+              </label>
+            </div>
+          </div>
+
+          <div class="question-card">
+            <div class="question-number">Question 14</div>
+            <div class="question-text">
+              Which statement about the periodic table is TRUE?
+            </div>
+            <div class="options">
+              <label class="option">
+                <input type="radio" name="q14" value="A" /> A. Elements are
+                arranged by colour.
+              </label>
+              <label class="option">
+                <input type="radio" name="q14" value="B" /> B. Metals and
+                non-metals are mixed randomly.
+              </label>
+              <label class="option">
+                <input type="radio" name="q14" value="C" /> C. Elements are
+                arranged by increasing atomic number.
+              </label>
+              <label class="option">
+                <input type="radio" name="q14" value="D" /> D. Noble gases are
+                at the beginning of the table.
+              </label>
+            </div>
+          </div>
+
+          <div class="question-card">
+            <div class="question-number">Question 15</div>
+            <div class="question-text">
+              Which of these sets contains ONLY metals?
+            </div>
+            <div class="options">
+              <label class="option">
+                <input type="radio" name="q15" value="A" /> A. Sodium,
+                Magnesium, Calcium
+              </label>
+              <label class="option">
+                <input type="radio" name="q15" value="B" /> B. Carbon, Oxygen,
+                Sulphur
+              </label>
+              <label class="option">
+                <input type="radio" name="q15" value="C" /> C. Neon, Helium,
+                Argon
+              </label>
+              <label class="option">
+                <input type="radio" name="q15" value="D" /> D. Hydrogen,
+                Nitrogen, Phosphorus
+              </label>
+            </div>
+          </div>
+
+          <div style="text-align: center; margin-top: 2rem">
+            <button type="submit" class="btn btn-success">Submit Test</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Result Screen -->
+      <div id="result-screen" class="card result-card hidden">
+        <h1>Test Completed!</h1>
+        <div class="score" id="score-display">0/15 (0%)</div>
+        <div class="score-message" id="score-message">
+          Thank you for completing the test.
+        </div>
+        <p>A detailed review has been sent to the instructor.</p>
+        <button id="restart-quiz" class="btn">Take Test Again</button>
+      </div>
+
+      <footer>
+        <p>Made with care by MatterQuiz</p>
+        <p>&copy; 2025 MatterQuiz Assessment Platform. All rights reserved.</p>
+      </footer>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // DOM Elements
+        const welcomeScreen = document.getElementById("welcome-screen");
+        const quizScreen = document.getElementById("quiz-screen");
+        const resultScreen = document.getElementById("result-screen");
+        const startQuizBtn = document.getElementById("start-quiz");
+        const quizForm = document.getElementById("quiz-form");
+        const restartQuizBtn = document.getElementById("restart-quiz");
+        const timeRemainingElement = document.getElementById("time-remaining");
+        const progressBar = document.getElementById("progress");
+        const scoreDisplay = document.getElementById("score-display");
+        const scoreMessage = document.getElementById("score-message");
+
+        // Timer variables
+        let examDuration = 10 * 60; // 10 minutes in seconds
+        let timeRemaining = examDuration;
+        let examStartTime;
+        let timerInterval;
+
+        // Correct answers
+        const correctAnswers = {
+          q1: "B",
+          q2: "B",
+          q3: "B",
+          q4: "C",
+          q5: "C",
+          q6: "B",
+          q7: "A",
+          q8: "B",
+          q9: "A",
+          q10: "B",
+          q11: "A",
+          q12: "A",
+          q13: "B",
+          q14: "C",
+          q15: "A",
+        };
+
+        // Question texts for email report
+        const questionTexts = {
+          q1: "Which is the first element in the periodic table?",
+          q2: 'Which element has the symbol "Na"?',
+          q3: "Which of the following is a noble gas?",
+          q4: "Which of these is a metal?",
+          q5: "What is the symbol for Potassium?",
+          q6: "What is the 12th element in the periodic table?",
+          q7: "Which pair contains ONLY noble gases?",
+          q8: "Which of the following is a non-metal?",
+          q9: "Which element has atomic number 20?",
+          q10: "What is the chemical symbol for the element with atomic number 17?",
+          q11: "Which two elements are gases we breathe in and out?",
+          q12: "Which element is the 8th in the periodic table?",
+          q13: "What is the symbol of the element with atomic number 19?",
+          q14: "Which statement about the periodic table is TRUE?",
+          q15: "Which of these sets contains ONLY metals?",
+        };
+
+        // Option texts for email report
+        const optionTexts = {
+          q1: {
+            A: "A. Helium (He)",
+            B: "B. Hydrogen (H)",
+            C: "C. Lithium (Li)",
+            D: "D. Carbon (C)",
+          },
+          q2: {
+            A: "A. Nitrogen",
+            B: "B. Sodium",
+            C: "C. Neon",
+            D: "D. Nickel",
+          },
+          q3: {
+            A: "A. Oxygen (O)",
+            B: "B. Neon (Ne)",
+            C: "C. Magnesium (Mg)",
+            D: "D. Sulphur (S)",
+          },
+          q4: {
+            A: "A. Carbon (C)",
+            B: "B. Phosphorus (P)",
+            C: "C. Aluminium (Al)",
+            D: "D. Oxygen (O)",
+          },
+          q5: {
+            A: "A. P",
+            B: "B. Po",
+            C: "C. K",
+            D: "D. Pt",
+          },
+          q6: {
+            A: "A. Sodium (Na)",
+            B: "B. Magnesium (Mg)",
+            C: "C. Aluminium (Al)",
+            D: "D. Phosphorus (P)",
+          },
+          q7: {
+            A: "A. Helium, Neon",
+            B: "B. Sodium, Magnesium",
+            C: "C. Hydrogen, Oxygen",
+            D: "D. Phosphorus, Sulphur",
+          },
+          q8: {
+            A: "A. Magnesium (Mg)",
+            B: "B. Oxygen (O)",
+            C: "C. Potassium (K)",
+            D: "D. Aluminium (Al)",
+          },
+          q9: {
+            A: "A. Calcium (Ca)",
+            B: "B. Argon (Ar)",
+            C: "C. Potassium (K)",
+            D: "D. Sulphur (S)",
+          },
+          q10: {
+            A: "A. C",
+            B: "B. Cl",
+            C: "C. Ca",
+            D: "D. Cr",
+          },
+          q11: {
+            A: "A. Nitrogen and Oxygen",
+            B: "B. Sodium and Potassium",
+            C: "C. Magnesium and Aluminium",
+            D: "D. Carbon and Calcium",
+          },
+          q12: {
+            A: "A. Oxygen (O)",
+            B: "B. Nitrogen (N)",
+            C: "C. Fluorine (F)",
+            D: "D. Neon (Ne)",
+          },
+          q13: {
+            A: "A. P",
+            B: "B. K",
+            C: "C. Ca",
+            D: "D. Kr",
+          },
+          q14: {
+            A: "A. Elements are arranged by colour.",
+            B: "B. Metals and non-metals are mixed randomly.",
+            C: "C. Elements are arranged by increasing atomic number.",
+            D: "D. Noble gases are at the beginning of the table.",
+          },
+          q15: {
+            A: "A. Sodium, Magnesium, Calcium",
+            B: "B. Carbon, Oxygen, Sulphur",
+            C: "C. Neon, Helium, Argon",
+            D: "D. Hydrogen, Nitrogen, Phosphorus",
+          },
+        };
+
+        // Check if exam was already started
+        function checkExistingExam() {
+          const savedStartTime = localStorage.getItem("examStartTime");
+          if (savedStartTime) {
+            const startTime = new Date(savedStartTime);
+            const currentTime = new Date();
+            const elapsedTime = Math.floor((currentTime - startTime) / 1000);
+            if (elapsedTime < examDuration) {
+              examStartTime = startTime;
+              timeRemaining = examDuration - elapsedTime;
+              startQuiz();
+            } else {
+              localStorage.removeItem("examStartTime");
+            }
+          }
+        }
+
+        // Start the quiz
+        function startQuiz() {
+          welcomeScreen.classList.add("hidden");
+          quizScreen.classList.remove("hidden");
+
+          // If it's a new exam, save start time
+          if (!examStartTime) {
+            examStartTime = new Date();
+            localStorage.setItem("examStartTime", examStartTime);
+          }
+
+          // Start timer
+          updateTimerDisplay();
+          timerInterval = setInterval(updateTimer, 1000);
+
+          // Restore saved answers if any
+          restoreAnswers();
+
+          // Add event listeners to options
+          const options = document.querySelectorAll(".option");
+          options.forEach((option) => {
+            option.addEventListener("click", function () {
+              const radio = this.querySelector('input[type="radio"]');
+              if (radio) {
+                radio.checked = true;
+                // Update visual selection
+                const questionCard = this.closest(".question-card");
+                const allOptions = questionCard.querySelectorAll(".option");
+                allOptions.forEach((opt) => opt.classList.remove("selected"));
+                this.classList.add("selected");
+                // Save answer to localStorage
+                saveAnswers();
+                updateProgress();
+              }
+            });
+          });
+
+          updateProgress();
+        }
+
+        // Update timer
+        function updateTimer() {
+          timeRemaining--;
+          updateTimerDisplay();
+          if (timeRemaining <= 0) {
+            clearInterval(timerInterval);
+            submitQuiz(true); // Auto-submit when time runs out
+          }
+        }
+
+        // Update timer display
+        function updateTimerDisplay() {
+          const minutes = Math.floor(timeRemaining / 60);
+          const seconds = timeRemaining % 60;
+          timeRemainingElement.textContent = `${minutes}:${
+            seconds < 10 ? "0" : ""
+          }${seconds}`;
+
+          // Update timer styling based on time remaining
+          const timerElement = document.querySelector(".timer");
+          timerElement.classList.remove("warning", "danger");
+          if (timeRemaining <= 60) {
+            timerElement.classList.add("danger");
+          } else if (timeRemaining <= 300) {
+            timerElement.classList.add("warning");
+          }
+        }
+
+        // Update progress bar
+        function updateProgress() {
+          const totalQuestions = Object.keys(correctAnswers).length;
+          const answeredQuestions = document.querySelectorAll(
+            'input[type="radio"]:checked'
+          ).length;
+          const progressPercentage = (answeredQuestions / totalQuestions) * 100;
+          progressBar.style.width = `${progressPercentage}%`;
+        }
+
+        // Save answers to localStorage
+        function saveAnswers() {
+          const formData = new FormData(quizForm);
+          const answers = {};
+          for (let [key, value] of formData.entries()) {
+            answers[key] = value;
+          }
+          localStorage.setItem("quizAnswers", JSON.stringify(answers));
+        }
+
+        // Restore answers from localStorage
+        function restoreAnswers() {
+          const savedAnswers = localStorage.getItem("quizAnswers");
+          if (savedAnswers) {
+            const answers = JSON.parse(savedAnswers);
+            for (let [questionId, answer] of Object.entries(answers)) {
+              const radio = document.querySelector(
+                `input[name="${questionId}"][value="${answer}"]`
+              );
+              if (radio) {
+                radio.checked = true;
+                // Update visual selection
+                const option = radio.closest(".option");
+                if (option) {
+                  option.classList.add("selected");
+                }
+              }
+            }
+            updateProgress();
+          }
+        }
+
+        // Submit quiz
+        function submitQuiz(isAutoSubmit = false) {
+          clearInterval(timerInterval);
+          const formData = new FormData(quizForm);
+          const answers = {};
+          for (let [key, value] of formData.entries()) {
+            answers[key] = value;
+          }
+
+          // Calculate score
+          let score = 0;
+          const results = [];
+          for (let [questionId, correctAnswer] of Object.entries(
+            correctAnswers
+          )) {
+            const studentAnswer = answers[questionId];
+            const isCorrect = studentAnswer === correctAnswer;
+            if (isCorrect) {
+              score++;
+            }
+            results.push({
+              questionId,
+              question: questionTexts[questionId],
+              studentAnswer: studentAnswer || "Not answered",
+              correctAnswer: optionTexts[questionId][correctAnswer],
+              isCorrect,
+              options: Object.values(optionTexts[questionId]),
+            });
+          }
+
+          const percentage = Math.round(
+            (score / Object.keys(correctAnswers).length) * 100
+          );
+
+          // Display results to student
+          displayResults(score, percentage);
+
+          // Send detailed results to email
+          sendResultsToEmail(results, score, percentage, isAutoSubmit);
+
+          // Clear localStorage
+          localStorage.removeItem("examStartTime");
+          localStorage.removeItem("quizAnswers");
+        }
+
+        // Display results to student
+        function displayResults(score, percentage) {
+          // Set message based on score
+          if (percentage >= 80) {
+            scoreMessage.textContent =
+              "Excellent work! You have a strong understanding of the periodic table.";
+          } else if (percentage >= 60) {
+            scoreMessage.textContent =
+              "Good job! You demonstrate solid knowledge of these science concepts.";
+          } else if (percentage >= 40) {
+            scoreMessage.textContent =
+              "Fair effort! Review the material to strengthen your understanding.";
+          } else {
+            scoreMessage.textContent =
+              "Keep studying! Focus on the key concepts and try again.";
+          }
+
+          // Show result screen
+          quizScreen.classList.add("hidden");
+          resultScreen.classList.remove("hidden");
+          scoreDisplay.textContent = `${score}/${
+            Object.keys(correctAnswers).length
+          } (${percentage}%)`;
+        }
+
+        // Send results to email via Formspree
+        function sendResultsToEmail(results, score, percentage, isAutoSubmit) {
+          // Create email content
+          let emailContent = `MatterQuiz Periodic Table Test Results\n\n`;
+          emailContent += `Student Score: ${score}/${
+            Object.keys(correctAnswers).length
+          } (${percentage}%)\n`;
+          emailContent += `Submission Type: ${
+            isAutoSubmit ? "Auto-submitted (time expired)" : "Manual submission"
+          }\n`;
+          emailContent += `Submission Time: ${new Date().toLocaleString()}\n\n`;
+          emailContent += `Detailed Results:\n\n`;
+
+          results.forEach((result) => {
+            emailContent += `Question ${result.questionId.substring(1)}: ${
+              result.question
+            }\n\n`;
+
+            emailContent += `Options:\n`;
+            result.options.forEach((option) => {
+              emailContent += `${option}\n`;
+            });
+            emailContent += `\n`;
+
+            emailContent += `Student's Answer: ${result.studentAnswer}\n`;
+            emailContent += `Correct Answer: ${result.correctAnswer}\n`;
+            emailContent += `Result: ${
+              result.isCorrect ? "Correct" : "Incorrect"
+            }\n`;
+
+            emailContent += `\n${"=".repeat(50)}\n\n`;
+          });
+
+          // Create a hidden form and submit it to Formspree
+          const form = document.createElement("form");
+          form.method = "POST";
+          form.action = "https://formspree.io/f/mgvypvgr";
+          form.target = "_blank";
+
+          const input = document.createElement("input");
+          input.type = "hidden";
+          input.name = "message";
+          input.value = emailContent;
+          form.appendChild(input);
+
+          document.body.appendChild(form);
+          form.submit();
+          document.body.removeChild(form);
+
+          // For demonstration, also log to console
+          console.log("=== EMAIL CONTENT ===");
+          console.log(emailContent);
+          console.log("=== END EMAIL ===");
+        }
+
+        // Restart quiz
+        function restartQuiz() {
+          resultScreen.classList.add("hidden");
+          welcomeScreen.classList.remove("hidden");
+
+          // Reset form
+          quizForm.reset();
+
+          // Remove visual selection
+          const options = document.querySelectorAll(".option");
+          options.forEach((option) => {
+            option.classList.remove("selected");
+          });
+
+          // Reset timer
+          timeRemaining = examDuration;
+          examStartTime = null;
+          updateTimerDisplay();
+
+          // Reset progress bar
+          progressBar.style.width = "0%";
+
+          // Reset timer styling
+          const timerElement = document.querySelector(".timer");
+          timerElement.classList.remove("warning", "danger");
+        }
+
+        // Event listeners
+        startQuizBtn.addEventListener("click", startQuiz);
+        quizForm.addEventListener("submit", function (e) {
+          e.preventDefault();
+          submitQuiz();
+        });
+        restartQuizBtn.addEventListener("click", restartQuiz);
+
+        // Check for existing exam on page load
+        checkExistingExam();
+      });
+    </script>
+
+    <!-- Font Awesome for icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </body>
+</html>
