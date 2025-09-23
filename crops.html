@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GrammarQuiz - English Language Test</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      :root {
+        --primary-color: #2e7d32;
+        --secondary-color: #4caf50;
+        --accent-color: #66bb6a;
+        --success-color: #00c853;
+        --danger-color: #d32f2f;
+        --warning-color: #ff9800;
+        --light-color: #e8f5e9;
+        --dark-color: #1b5e20;
+        --text-primary: #333333;
+        --text-secondary: #555555;
+        --border-color: #a5d6a7;
+        --bg-primary: #ffffff;
+        --bg-secondary: #e8f5e9;
+        --shadow: 0 4px 6px -1px rgba(46, 125, 50, 0.15);
+        --shadow-lg: 0 10px 15px -3px rgba(46, 125, 50, 0.15);
+      }
+
+      body {
+        background: linear-gradient(
+          135deg,
+          #e8f5e9 0%,
+          #c8e6c9 50%,
+          #a5d6a7 100%
+        );
+        color: var(--text-primary);
+        line-height: 1.6;
+        min-height: 100vh;
+      }
+
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      header {
+        background: linear-gradient(
+          135deg,
+          var(--primary-color) 0%,
+          var(--secondary-color) 100%
+        );
+        color: white;
+        padding: 2rem 0;
+        text-align: center;
+        margin-bottom: 2rem;
+        border-radius: 12px;
+        box-shadow: var(--shadow-lg);
+      }
+
+      .logo {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+      }
+
+      .tagline {
+        font-size: 1.1rem;
+        opacity: 0.9;
+        font-weight: 300;
+      }
+
+      .card {
+        background: var(--bg-primary);
+        border-radius: 12px;
+        box-shadow: var(--shadow);
+        padding: 2rem;
+        margin: 1.5rem 0;
+        border: 1px solid var(--border-color);
+      }
+
+      .btn {
+        display: inline-block;
+        background: linear-gradient(
+          135deg,
+          var(--primary-color) 0%,
+          var(--secondary-color) 100%
+        );
+        color: white;
+        padding: 12px 24px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1rem;
+        font-weight: 600;
+        text-align: center;
+        transition: all 0.2s ease;
+        text-decoration: none;
+      }
+
+      .btn:hover {
+        background: linear-gradient(
+          135deg,
+          var(--secondary-color) 0%,
+          var(--accent-color) 100%
+        );
+        transform: translateY(-1px);
+        box-shadow: var(--shadow);
+      }
+
+      .btn-success {
+        background: var(--success-color);
+      }
+
+      .btn-success:hover {
+        background: #00a63f;
+      }
+
+      .timer {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        background: var(--bg-primary);
+        padding: 12px 20px;
+        border-radius: 8px;
+        border: 2px solid var(--border-color);
+        box-shadow: var(--shadow);
+        z-index: 1000;
+      }
+
+      .timer.warning {
+        color: var(--warning-color);
+        border-color: var(--warning-color);
+      }
+
+      .timer.danger {
+        color: var(--danger-color);
+        border-color: var(--danger-color);
+      }
+
+      .progress-container {
+        margin: 1.5rem 0;
+        padding: 1.5rem;
+        background: var(--bg-secondary);
+        border-radius: 8px;
+      }
+
+      .progress-bar {
+        height: 12px;
+        background: var(--border-color);
+        border-radius: 6px;
+        overflow: hidden;
+      }
+
+      .progress {
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          var(--primary-color) 0%,
+          var(--secondary-color) 100%
+        );
+        width: 0%;
+        transition: width 0.3s ease;
+        border-radius: 6px;
+      }
+
+      .question-card {
+        margin-bottom: 2rem;
+        padding: 1.5rem;
+        background: var(--bg-primary);
+        border-radius: 8px;
+        border-left: 4px solid var(--primary-color);
+        box-shadow: var(--shadow);
+      }
+
+      .question-number {
+        font-weight: 600;
+        color: var(--primary-color);
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+      }
+
+      .question-text {
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+        line-height: 1.6;
+        color: var(--text-primary);
+        font-weight: 500;
+      }
+
+      .options {
+        display: grid;
+        gap: 12px;
+        margin-top: 1rem;
+      }
+
+      .option {
+        padding: 12px;
+        border: 2px solid var(--border-color);
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        background: var(--bg-primary);
+      }
+
+      .option:hover {
+        border-color: var(--accent-color);
+        background: var(--light-color);
+      }
+
+      .option.selected {
+        border-color: var(--primary-color);
+        background: #e8f5e9;
+        font-weight: 500;
+      }
+
+      .option input[type="radio"] {
+        margin-right: 12px;
+        accent-color: var(--primary-color);
+      }
+
+      .section-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 2rem 0 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid var(--border-color);
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      .result-card {
+        text-align: center;
+        padding: 3rem;
+      }
+
+      .score {
+        font-size: 3rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin: 1rem 0;
+      }
+
+      .score-message {
+        font-size: 1.2rem;
+        margin-bottom: 2rem;
+        color: var(--text-secondary);
+      }
+
+      .welcome-screen {
+        text-align: center;
+      }
+
+      .welcome-screen h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 1rem;
+      }
+
+      .welcome-screen p {
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+        color: var(--text-secondary);
+        line-height: 1.6;
+      }
+
+      .exam-info {
+        display: flex;
+        justify-content: space-around;
+        margin: 2rem 0;
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+
+      .info-item {
+        text-align: center;
+        padding: 1.5rem;
+        background: var(--bg-secondary);
+        border-radius: 8px;
+        min-width: 120px;
+        border: 1px solid var(--border-color);
+      }
+
+      .info-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin-bottom: 0.25rem;
+      }
+
+      .info-label {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+        font-weight: 500;
+        text-transform: uppercase;
+      }
+
+      .instructions {
+        text-align: left;
+        background: var(--bg-secondary);
+        padding: 1.5rem;
+        border-radius: 8px;
+        margin: 1.5rem 0;
+      }
+
+      .instructions h3 {
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+        font-size: 1.2rem;
+        font-weight: 600;
+      }
+
+      .instructions ul {
+        padding-left: 1.5rem;
+      }
+
+      .instructions li {
+        margin-bottom: 0.75rem;
+        color: var(--text-secondary);
+        line-height: 1.5;
+      }
+
+      footer {
+        background: linear-gradient(
+          135deg,
+          var(--dark-color) 0%,
+          var(--primary-color) 100%
+        );
+        color: white;
+        text-align: center;
+        padding: 2rem 0;
+        margin-top: 3rem;
+        border-radius: 12px;
+      }
+
+      footer p {
+        opacity: 0.9;
+      }
+
+      @media (max-width: 768px) {
+        .container {
+          padding: 15px;
+        }
+
+        .card {
+          padding: 1.5rem;
+          margin: 1rem 0;
+        }
+
+        .exam-info {
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .timer {
+          top: 10px;
+          right: 10px;
+          padding: 8px 12px;
+          font-size: 1rem;
+        }
+
+        .welcome-screen h1 {
+          font-size: 2rem;
+        }
+
+        .section-title {
+          font-size: 1.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <div class="logo">
+          <i class="fas fa-book-open"></i>
+          GrammarQuiz
+        </div>
+        <div class="tagline">English Language Assessment Platform</div>
+      </header>
+
+      <!-- Welcome Screen -->
+      <div id="welcome-screen" class="card welcome-screen">
+        <h1>English Language Test</h1>
+        <p>
+          You are about to take a test on English grammar and writing skills.
+          Please read the instructions carefully before starting.
+        </p>
+
+        <div class="exam-info">
+          <div class="info-item">
+            <div class="info-value">10</div>
+            <div class="info-label">Questions</div>
+          </div>
+          <div class="info-item">
+            <div class="info-value">10</div>
+            <div class="info-label">Minutes</div>
+          </div>
+          <div class="info-item">
+            <div class="info-value">1</div>
+            <div class="info-label">Subject</div>
+          </div>
+        </div>
+
+        <div class="instructions">
+          <h3>Test Instructions</h3>
+          <ul>
+            <li>The test consists of 10 multiple choice questions</li>
+            <li>You have 10 minutes to complete the test</li>
+            <li>The timer will continue even if you refresh the page</li>
+            <li>
+              When time runs out, your test will be automatically submitted
+            </li>
+            <li>Select one answer for each question</li>
+            <li>After submission, you will see your final score</li>
+            <li>Make sure you have a stable internet connection</li>
+          </ul>
+        </div>
+
+        <button id="start-quiz" class="btn">Start Test</button>
+      </div>
+
+      <!-- Quiz Screen -->
+      <div id="quiz-screen" class="hidden">
+        <div class="timer">
+          <i class="fas fa-clock"></i>
+          <span id="time-remaining">10:00</span>
+        </div>
+
+        <div class="progress-container">
+          <div class="progress-bar">
+            <div id="progress" class="progress"></div>
+          </div>
+        </div>
+
+        <form id="quiz-form">
+          <h2 class="section-title">English Grammar</h2>
+
+          <div class="question-card">
+            <div class="question-number">Question 1</div>
+            <div class="question-text">
+              Which of the following is the best definition of cohesion in
+              writing?
+            </div>
+            <div class="options">
+              <label class="option">
+                <input type="radio" name="q1" value="A" /> A. Writing long
+                sentences
+              </label>
+              <label class="option">
+                <input type="radio" name="q1" value="B" /> B. Joining ideas
+                smoothly so writing makes sense
+              </label>
+              <label class="option">
+                <input type="radio" name="q1" value="C" /> C. Using only
+                punctuation
+              </label>
+              <label class="option">
+                <input type="radio" name="q1" value="D" /> D. Memorizing words
+              </label>
+            </div>
+          </div>
+
+          <div class="question-card">
+            <div class="question-number">Question 2</div>
+            <div class="question-text">
+              Which sentence uses a coordinating conjunction correctly?
+            </div>
+            <div class="options">
+              <label class="option">
+                <input type="radio" name="q2" value="A" /> A. I was hungry
+                because I ate food.
+              </label>
+              <label class="option">
+                <input type="radio" name="q2" value="B" /> B. I was tired, yet I
+                finished my homework.
+              </label>
+              <label class="option">
+                <input type="radio" name="q2" value="C" /> C. Although it
+                rained, I went out.
+              </label>
+              <label class="option">
+                <input type="radio" name="q2" value="D" /> D. Since it was late,
+                we slept.
+              </label>
+            </div>
+          </div>
+
+          <div class="question-card">
+            <div class="question-number">Question 3</div>
+            <div class="question-text">
+              Identify the subordinating conjunction in this sentence: "We
+              stayed indoors until the rain stopped."
+            </div>
+            <div class="options">
+              <label class="option">
+                <input type="radio" name="q3" value="A" /> A. indoors
+              </label>
+              <label class="option">
+                <input type="radio" name="q3" value="B" /> B. until
+              </label>
+              <label class="option">
+                <input type="radio" name="q3" value="C" /> C. rain
+              </label>
+              <label class="option">
+                <input type="radio" name="q3" value="D" /> D. stopped
+              </label>
+            </div>
+          </div>
+
+          <div class="question-card">
+            <div class="question-number">Question 4</div>
+            <div class="question-text">
+              Which of the following sentences shows a purpose clause?
+            </div>
+            <div class="options">
+              <label class="option">
+                <input type="radio" name="q4" value="A" /> A. I slept because I
+                was tired.
+              </label>
+              <label class="option">
+                <input type="radio" name="q4" value="B" /> B. She studied hard
+                so that she could pass.
+              </label>
+              <label class="option">
+                <input type="radio" name="q4" value="C" /> C. I was late
+                although I tried.
+              </label>
+              <label class="option">
+                <input type="radio" name="q4" value="D" /> D. We played until it
+                was dark.
+              </label>
+            </div>
+          </div>
+
+          <div class="question-card">
+            <div class="question-number">Question 5</div>
+            <div class="question-text">
+              Which sentence contains a pronoun that replaces a noun?
+            </div>
+            <div class="options">
+              <label class="option">
+                <input type="radio" name="q5" value="A" /> A. The teacher is
+                kind.
+              </label>
+              <label class="option">
+                <input type="radio" name="q5" value="B" /> B. The dog is barking
+                loudly.
+              </label>
+              <label class="option">
+                <input type="radio" name="q5" value="C" /> C. Ama is my friend.
+                She helps me always.
+              </label>
+              <label class="option">
+                <input type="radio" name="q5" value="D" /> D. My father works in
+                the garden.
+              </label>
+            </div>
+          </div>
+
+          <div class="question-card">
+            <div class="question-number">Question 6</div>
+            <div class="question-text">
+              Which punctuation mark is used to show a question?
+            </div>
+            <div class="options">
+              <label class="option">
+                <input type="radio" name="q6" value="A" /> A. Full stop (.)
+              </label>
+              <label class="option">
+                <input type="radio" name="q6" value="B" /> B. Exclamation mark
+                (!)
+              </label>
+              <label class="option">
+                <input type="radio" name="q6" value="C" /> C. Question mark (?)
+              </label>
+              <label class="option">
+                <input type="radio" name="q6" value="D" /> D. Comma (,)
+              </label>
+            </div>
+          </div>
+
+          <div class="question-card">
+            <div class="question-number">Question 7</div>
+            <div class="question-text">
+              What is the correct order of sentences in a good paragraph?
+            </div>
+            <div class="options">
+              <label class="option">
+                <input type="radio" name="q7" value="A" /> A. Concluding
+                sentence → Supporting sentences → Topic sentence
+              </label>
+              <label class="option">
+                <input type="radio" name="q7" value="B" /> B. Topic sentence →
+                Supporting sentences → Concluding sentence
+              </label>
+              <label class="option">
+                <input type="radio" name="q7" value="C" /> C. Supporting
+                sentences → Concluding sentence → Topic sentence
+              </label>
+              <label class="option">
+                <input type="radio" name="q7" value="D" /> D. Any order is
+                acceptable
+              </label>
+            </div>
+          </div>
+
+          <div class="question-card">
+            <div class="question-number">Question 8</div>
+            <div class="question-text">
+              Which of these is a logical connector for contrast?
+            </div>
+            <div class="options">
+              <label class="option">
+                <input type="radio" name="q8" value="A" /> A. moreover
+              </label>
+              <label class="option">
+                <input type="radio" name="q8" value="B" /> B. finally
+              </label>
+              <label class="option">
+                <input type="radio" name="q8" value="C" /> C. however
+              </label>
+              <label class="option">
+                <input type="radio" name="q8" value="D" /> D. because
+              </label>
+            </div>
+          </div>
+
+          <div class="question-card">
+            <div class="question-number">Question 9</div>
+            <div class="question-text">
+              (Synonym) Which word is closest in meaning to happy in this
+              sentence? "Finally, I returned home tired but happy."
+            </div>
+            <div class="options">
+              <label class="option">
+                <input type="radio" name="q9" value="A" /> A. sad
+              </label>
+              <label class="option">
+                <input type="radio" name="q9" value="B" /> B. joyful
+              </label>
+              <label class="option">
+                <input type="radio" name="q9" value="C" /> C. angry
+              </label>
+              <label class="option">
+                <input type="radio" name="q9" value="D" /> D. weak
+              </label>
+            </div>
+          </div>
+
+          <div class="question-card">
+            <div class="question-number">Question 10</div>
+            <div class="question-text">
+              (Antonym) Which word is the opposite in meaning to early?
+            </div>
+            <div class="options">
+              <label class="option">
+                <input type="radio" name="q10" value="A" /> A. fast
+              </label>
+              <label class="option">
+                <input type="radio" name="q10" value="B" /> B. quick
+              </label>
+              <label class="option">
+                <input type="radio" name="q10" value="C" /> C. late
+              </label>
+              <label class="option">
+                <input type="radio" name="q10" value="D" /> D. soon
+              </label>
+            </div>
+          </div>
+
+          <div style="text-align: center; margin-top: 2rem">
+            <button type="submit" class="btn btn-success">Submit Test</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Result Screen -->
+      <div id="result-screen" class="card result-card hidden">
+        <h1>Test Completed!</h1>
+        <div class="score" id="score-display">0/10 (0%)</div>
+        <div class="score-message" id="score-message">
+          Thank you for completing the test.
+        </div>
+        <p>A detailed review has been sent to the instructor.</p>
+        <button id="restart-quiz" class="btn">Take Test Again</button>
+      </div>
+
+      <footer>
+        <p>Made with care by GrammarQuiz</p>
+        <p>&copy; 2025 GrammarQuiz Assessment Platform. All rights reserved.</p>
+      </footer>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // DOM Elements
+        const welcomeScreen = document.getElementById("welcome-screen");
+        const quizScreen = document.getElementById("quiz-screen");
+        const resultScreen = document.getElementById("result-screen");
+        const startQuizBtn = document.getElementById("start-quiz");
+        const quizForm = document.getElementById("quiz-form");
+        const restartQuizBtn = document.getElementById("restart-quiz");
+        const timeRemainingElement = document.getElementById("time-remaining");
+        const progressBar = document.getElementById("progress");
+        const scoreDisplay = document.getElementById("score-display");
+        const scoreMessage = document.getElementById("score-message");
+
+        // Timer variables
+        let examDuration = 10 * 60; // 10 minutes in seconds
+        let timeRemaining = examDuration;
+        let examStartTime;
+        let timerInterval;
+
+        // Correct answers
+        const correctAnswers = {
+          q1: "B",
+          q2: "B",
+          q3: "B",
+          q4: "B",
+          q5: "C",
+          q6: "C",
+          q7: "B",
+          q8: "C",
+          q9: "B",
+          q10: "C",
+        };
+
+        // Question texts for email report
+        const questionTexts = {
+          q1: "Which of the following is the best definition of cohesion in writing?",
+          q2: "Which sentence uses a coordinating conjunction correctly?",
+          q3: 'Identify the subordinating conjunction in this sentence: "We stayed indoors until the rain stopped."',
+          q4: "Which of the following sentences shows a purpose clause?",
+          q5: "Which sentence contains a pronoun that replaces a noun?",
+          q6: "Which punctuation mark is used to show a question?",
+          q7: "What is the correct order of sentences in a good paragraph?",
+          q8: "Which of these is a logical connector for contrast?",
+          q9: '(Synonym) Which word is closest in meaning to happy in this sentence? "Finally, I returned home tired but happy."',
+          q10: "(Antonym) Which word is the opposite in meaning to early?",
+        };
+
+        // Option texts for email report
+        const optionTexts = {
+          q1: {
+            A: "A. Writing long sentences",
+            B: "B. Joining ideas smoothly so writing makes sense",
+            C: "C. Using only punctuation",
+            D: "D. Memorizing words",
+          },
+          q2: {
+            A: "A. I was hungry because I ate food.",
+            B: "B. I was tired, yet I finished my homework.",
+            C: "C. Although it rained, I went out.",
+            D: "D. Since it was late, we slept.",
+          },
+          q3: {
+            A: "A. indoors",
+            B: "B. until",
+            C: "C. rain",
+            D: "D. stopped",
+          },
+          q4: {
+            A: "A. I slept because I was tired.",
+            B: "B. She studied hard so that she could pass.",
+            C: "C. I was late although I tried.",
+            D: "D. We played until it was dark.",
+          },
+          q5: {
+            A: "A. The teacher is kind.",
+            B: "B. The dog is barking loudly.",
+            C: "C. Ama is my friend. She helps me always.",
+            D: "D. My father works in the garden.",
+          },
+          q6: {
+            A: "A. Full stop (.)",
+            B: "B. Exclamation mark (!)",
+            C: "C. Question mark (?)",
+            D: "D. Comma (,)",
+          },
+          q7: {
+            A: "A. Concluding sentence → Supporting sentences → Topic sentence",
+            B: "B. Topic sentence → Supporting sentences → Concluding sentence",
+            C: "C. Supporting sentences → Concluding sentence → Topic sentence",
+            D: "D. Any order is acceptable",
+          },
+          q8: {
+            A: "A. moreover",
+            B: "B. finally",
+            C: "C. however",
+            D: "D. because",
+          },
+          q9: {
+            A: "A. sad",
+            B: "B. joyful",
+            C: "C. angry",
+            D: "D. weak",
+          },
+          q10: {
+            A: "A. fast",
+            B: "B. quick",
+            C: "C. late",
+            D: "D. soon",
+          },
+        };
+
+        // Clear any saved answers when page loads
+        localStorage.removeItem("quizAnswers");
+
+        // Check if exam was already started
+        function checkExistingExam() {
+          const savedStartTime = localStorage.getItem("examStartTime");
+          if (savedStartTime) {
+            const startTime = new Date(savedStartTime);
+            const currentTime = new Date();
+            const elapsedTime = Math.floor((currentTime - startTime) / 1000);
+            if (elapsedTime < examDuration) {
+              examStartTime = startTime;
+              timeRemaining = examDuration - elapsedTime;
+              startQuiz();
+            } else {
+              localStorage.removeItem("examStartTime");
+            }
+          }
+        }
+
+        // Start the quiz
+        function startQuiz() {
+          welcomeScreen.classList.add("hidden");
+          quizScreen.classList.remove("hidden");
+
+          // Scroll to top of the page
+          window.scrollTo(0, 0);
+
+          // If it's a new exam, save start time
+          if (!examStartTime) {
+            examStartTime = new Date();
+            localStorage.setItem("examStartTime", examStartTime);
+          }
+
+          // Start timer
+          updateTimerDisplay();
+          timerInterval = setInterval(updateTimer, 1000);
+
+          // Clear any saved answers for new quiz
+          if (!localStorage.getItem("quizAnswers")) {
+            quizForm.reset();
+            // Remove visual selection
+            const options = document.querySelectorAll(".option");
+            options.forEach((option) => {
+              option.classList.remove("selected");
+            });
+          }
+
+          // Restore saved answers if any
+          restoreAnswers();
+
+          // Add event listeners to options
+          const options = document.querySelectorAll(".option");
+          options.forEach((option) => {
+            option.addEventListener("click", function () {
+              const radio = this.querySelector('input[type="radio"]');
+              if (radio) {
+                radio.checked = true;
+                // Update visual selection
+                const questionCard = this.closest(".question-card");
+                const allOptions = questionCard.querySelectorAll(".option");
+                allOptions.forEach((opt) => opt.classList.remove("selected"));
+                this.classList.add("selected");
+                // Save answer to localStorage
+                saveAnswers();
+                updateProgress();
+              }
+            });
+          });
+
+          updateProgress();
+        }
+
+        // Update timer
+        function updateTimer() {
+          timeRemaining--;
+          updateTimerDisplay();
+          if (timeRemaining <= 0) {
+            clearInterval(timerInterval);
+            submitQuiz(true); // Auto-submit when time runs out
+          }
+        }
+
+        // Update timer display
+        function updateTimerDisplay() {
+          const minutes = Math.floor(timeRemaining / 60);
+          const seconds = timeRemaining % 60;
+          timeRemainingElement.textContent = `${minutes}:${
+            seconds < 10 ? "0" : ""
+          }${seconds}`;
+
+          // Update timer styling based on time remaining
+          const timerElement = document.querySelector(".timer");
+          timerElement.classList.remove("warning", "danger");
+          if (timeRemaining <= 60) {
+            timerElement.classList.add("danger");
+          } else if (timeRemaining <= 300) {
+            timerElement.classList.add("warning");
+          }
+        }
+
+        // Update progress bar
+        function updateProgress() {
+          const totalQuestions = Object.keys(correctAnswers).length;
+          const answeredQuestions = document.querySelectorAll(
+            'input[type="radio"]:checked'
+          ).length;
+          const progressPercentage = (answeredQuestions / totalQuestions) * 100;
+          progressBar.style.width = `${progressPercentage}%`;
+        }
+
+        // Save answers to localStorage
+        function saveAnswers() {
+          const formData = new FormData(quizForm);
+          const answers = {};
+          for (let [key, value] of formData.entries()) {
+            answers[key] = value;
+          }
+          localStorage.setItem("quizAnswers", JSON.stringify(answers));
+        }
+
+        // Restore answers from localStorage
+        function restoreAnswers() {
+          const savedAnswers = localStorage.getItem("quizAnswers");
+          if (savedAnswers) {
+            const answers = JSON.parse(savedAnswers);
+            for (let [questionId, answer] of Object.entries(answers)) {
+              const radio = document.querySelector(
+                `input[name="${questionId}"][value="${answer}"]`
+              );
+              if (radio) {
+                radio.checked = true;
+                // Update visual selection
+                const option = radio.closest(".option");
+                if (option) {
+                  option.classList.add("selected");
+                }
+              }
+            }
+            updateProgress();
+          }
+        }
+
+        // Submit quiz
+        function submitQuiz(isAutoSubmit = false) {
+          clearInterval(timerInterval);
+          const formData = new FormData(quizForm);
+          const answers = {};
+          for (let [key, value] of formData.entries()) {
+            answers[key] = value;
+          }
+
+          // Calculate score
+          let score = 0;
+          const results = [];
+          for (let [questionId, correctAnswer] of Object.entries(
+            correctAnswers
+          )) {
+            const studentAnswer = answers[questionId];
+            const isCorrect = studentAnswer === correctAnswer;
+            if (isCorrect) {
+              score++;
+            }
+            results.push({
+              questionId,
+              question: questionTexts[questionId],
+              studentAnswer: studentAnswer || "Not answered",
+              correctAnswer: optionTexts[questionId][correctAnswer],
+              isCorrect,
+              options: Object.values(optionTexts[questionId]),
+            });
+          }
+
+          const percentage = Math.round(
+            (score / Object.keys(correctAnswers).length) * 100
+          );
+
+          // Display results to student
+          displayResults(score, percentage);
+
+          // Send detailed results to email
+          sendResultsToEmail(results, score, percentage, isAutoSubmit);
+
+          // Clear localStorage
+          localStorage.removeItem("examStartTime");
+          localStorage.removeItem("quizAnswers");
+        }
+
+        // Display results to student
+        function displayResults(score, percentage) {
+          // Set message based on score
+          if (percentage >= 80) {
+            scoreMessage.textContent =
+              "Excellent work! You have a strong understanding of English grammar.";
+          } else if (percentage >= 60) {
+            scoreMessage.textContent =
+              "Good job! You demonstrate solid knowledge of English language concepts.";
+          } else if (percentage >= 40) {
+            scoreMessage.textContent =
+              "Fair effort! Review the material to strengthen your understanding.";
+          } else {
+            scoreMessage.textContent =
+              "Keep studying! Focus on the key concepts and try again.";
+          }
+
+          // Show result screen
+          quizScreen.classList.add("hidden");
+          resultScreen.classList.remove("hidden");
+          scoreDisplay.textContent = `${score}/${
+            Object.keys(correctAnswers).length
+          } (${percentage}%)`;
+        }
+
+        // Send results to email via Formspree
+        function sendResultsToEmail(results, score, percentage, isAutoSubmit) {
+          // Create email content
+          let emailContent = `GrammarQuiz English Language Test Results\n\n`;
+          emailContent += `Student Score: ${score}/${
+            Object.keys(correctAnswers).length
+          } (${percentage}%)\n`;
+          emailContent += `Submission Type: ${
+            isAutoSubmit ? "Auto-submitted (time expired)" : "Manual submission"
+          }\n`;
+          emailContent += `Submission Time: ${new Date().toLocaleString()}\n\n`;
+          emailContent += `Detailed Results:\n\n`;
+
+          results.forEach((result) => {
+            emailContent += `Question ${result.questionId.substring(1)}: ${
+              result.question
+            }\n\n`;
+
+            emailContent += `Options:\n`;
+            result.options.forEach((option) => {
+              emailContent += `${option}\n`;
+            });
+            emailContent += `\n`;
+
+            emailContent += `Student's Answer: ${result.studentAnswer}\n`;
+            emailContent += `Correct Answer: ${result.correctAnswer}\n`;
+            emailContent += `Result: ${
+              result.isCorrect ? "Correct" : "Incorrect"
+            }\n`;
+
+            emailContent += `\n${"=".repeat(50)}\n\n`;
+          });
+
+          // Create a hidden form and submit it to Formspree
+          const form = document.createElement("form");
+          form.method = "POST";
+          form.action = "https://formspree.io/f/mgvypvgr";
+          form.target = "_blank";
+
+          const input = document.createElement("input");
+          input.type = "hidden";
+          input.name = "message";
+          input.value = emailContent;
+          form.appendChild(input);
+
+          document.body.appendChild(form);
+          form.submit();
+          document.body.removeChild(form);
+
+          // For demonstration, also log to console
+          console.log("=== EMAIL CONTENT ===");
+          console.log(emailContent);
+          console.log("=== END EMAIL ===");
+        }
+
+        // Restart quiz
+        function restartQuiz() {
+          resultScreen.classList.add("hidden");
+          welcomeScreen.classList.remove("hidden");
+
+          // Reset form
+          quizForm.reset();
+
+          // Remove visual selection
+          const options = document.querySelectorAll(".option");
+          options.forEach((option) => {
+            option.classList.remove("selected");
+          });
+
+          // Reset timer
+          timeRemaining = examDuration;
+          examStartTime = null;
+          updateTimerDisplay();
+
+          // Reset progress bar
+          progressBar.style.width = "0%";
+
+          // Reset timer styling
+          const timerElement = document.querySelector(".timer");
+          timerElement.classList.remove("warning", "danger");
+        }
+
+        // Event listeners
+        startQuizBtn.addEventListener("click", startQuiz);
+        quizForm.addEventListener("submit", function (e) {
+          e.preventDefault();
+          submitQuiz();
+        });
+        restartQuizBtn.addEventListener("click", restartQuiz);
+
+        // Check for existing exam on page load
+        checkExistingExam();
+      });
+    </script>
+
+    <!-- Font Awesome for icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </body>
+</html>
