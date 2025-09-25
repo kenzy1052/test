@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>EduHub - Agricultural Science Test</title>
+    <title>GrammarQuiz - English Language Test</title>
     <style>
       * {
         margin: 0;
@@ -13,29 +13,29 @@
       }
 
       :root {
-        --primary-color: #d946ef;
-        --secondary-color: #06b6d4;
-        --accent-color: #8b5cf6;
-        --success-color: #10b981;
-        --danger-color: #ef4444;
-        --warning-color: #f59e0b;
-        --light-color: #fdf4ff;
-        --dark-color: #701a75;
-        --text-primary: #1f2937;
-        --text-secondary: #4b5563;
-        --border-color: #d8b4fe;
+        --primary-color: #2e7d32;
+        --secondary-color: #4caf50;
+        --accent-color: #66bb6a;
+        --success-color: #00c853;
+        --danger-color: #d32f2f;
+        --warning-color: #ff9800;
+        --light-color: #e8f5e9;
+        --dark-color: #1b5e20;
+        --text-primary: #333333;
+        --text-secondary: #555555;
+        --border-color: #a5d6a7;
         --bg-primary: #ffffff;
-        --bg-secondary: #fdf4ff;
-        --shadow: 0 4px 6px -1px rgba(217, 70, 239, 0.15);
-        --shadow-lg: 0 10px 15px -3px rgba(217, 70, 239, 0.15);
+        --bg-secondary: #e8f5e9;
+        --shadow: 0 4px 6px -1px rgba(46, 125, 50, 0.15);
+        --shadow-lg: 0 10px 15px -3px rgba(46, 125, 50, 0.15);
       }
 
       body {
         background: linear-gradient(
           135deg,
-          #fdf4ff 0%,
-          #e0f2fe 50%,
-          #cffafe 100%
+          #e8f5e9 0%,
+          #c8e6c9 50%,
+          #a5d6a7 100%
         );
         color: var(--text-primary);
         line-height: 1.6;
@@ -121,7 +121,7 @@
       }
 
       .btn-success:hover {
-        background: #059669;
+        background: #00a63f;
       }
 
       .timer {
@@ -222,7 +222,7 @@
 
       .option.selected {
         border-color: var(--primary-color);
-        background: #fdf4ff;
+        background: #e8f5e9;
         font-weight: 500;
       }
 
@@ -389,28 +389,27 @@
     <div class="container">
       <header>
         <div class="logo">
-          <i class="fas fa-seedling"></i>
-          EduHub
+          <i class="fas fa-book-open"></i>
+          GrammarQuiz
         </div>
-        <div class="tagline">Agricultural Science Assessment Platform</div>
+        <div class="tagline">English Language Assessment Platform</div>
       </header>
 
       <!-- Welcome Screen -->
       <div id="welcome-screen" class="card welcome-screen">
-        <h1>Agricultural Science Test</h1>
+        <h1>English Language Test</h1>
         <p>
-          You are about to take a test on agricultural science focusing on
-          fertilizers and plant nutrients. Please read the instructions
-          carefully before starting.
+          You are about to take a test on English grammar and writing skills.
+          Please read the instructions carefully before starting.
         </p>
 
         <div class="exam-info">
           <div class="info-item">
-            <div class="info-value">15</div>
+            <div class="info-value">10</div>
             <div class="info-label">Questions</div>
           </div>
           <div class="info-item">
-            <div class="info-value">15</div>
+            <div class="info-value">10</div>
             <div class="info-label">Minutes</div>
           </div>
           <div class="info-item">
@@ -422,8 +421,8 @@
         <div class="instructions">
           <h3>Test Instructions</h3>
           <ul>
-            <li>The test consists of 15 multiple choice questions</li>
-            <li>You have 15 minutes to complete the test</li>
+            <li>The test consists of 10 multiple choice questions</li>
+            <li>You have 10 minutes to complete the test</li>
             <li>The timer will continue even if you refresh the page</li>
             <li>
               When time runs out, your test will be automatically submitted
@@ -441,7 +440,7 @@
       <div id="quiz-screen" class="hidden">
         <div class="timer">
           <i class="fas fa-clock"></i>
-          <span id="time-remaining">15:00</span>
+          <span id="time-remaining">10:00</span>
         </div>
 
         <div class="progress-container">
@@ -451,25 +450,29 @@
         </div>
 
         <form id="quiz-form">
-          <h2 class="section-title">Agricultural Science - Fertilizers</h2>
+          <h2 class="section-title">English Grammar</h2>
 
           <div class="question-card">
             <div class="question-number">Question 1</div>
             <div class="question-text">
-              Which of these is an example of an organic fertilizer?
+              Which of the following is the best definition of cohesion in
+              writing?
             </div>
             <div class="options">
               <label class="option">
-                <input type="radio" name="q1" value="A" /> A. NPK fertilizer
+                <input type="radio" name="q1" value="A" /> A. Writing long
+                sentences
               </label>
               <label class="option">
-                <input type="radio" name="q1" value="B" /> B. Urea
+                <input type="radio" name="q1" value="B" /> B. Joining ideas
+                smoothly so writing makes sense
               </label>
               <label class="option">
-                <input type="radio" name="q1" value="C" /> C. Poultry manure
+                <input type="radio" name="q1" value="C" /> C. Using only
+                punctuation
               </label>
               <label class="option">
-                <input type="radio" name="q1" value="D" /> D. Ammonium sulphate
+                <input type="radio" name="q1" value="D" /> D. Memorizing words
               </label>
             </div>
           </div>
@@ -477,20 +480,24 @@
           <div class="question-card">
             <div class="question-number">Question 2</div>
             <div class="question-text">
-              Inorganic fertilizers are mostly made in ________.
+              Which sentence uses a coordinating conjunction correctly?
             </div>
             <div class="options">
               <label class="option">
-                <input type="radio" name="q2" value="A" /> A. farms
+                <input type="radio" name="q2" value="A" /> A. I was hungry
+                because I ate food.
               </label>
               <label class="option">
-                <input type="radio" name="q2" value="B" /> B. factories
+                <input type="radio" name="q2" value="B" /> B. I was tired, yet I
+                finished my homework.
               </label>
               <label class="option">
-                <input type="radio" name="q2" value="C" /> C. kitchens
+                <input type="radio" name="q2" value="C" /> C. Although it
+                rained, I went out.
               </label>
               <label class="option">
-                <input type="radio" name="q2" value="D" /> D. gardens
+                <input type="radio" name="q2" value="D" /> D. Since it was late,
+                we slept.
               </label>
             </div>
           </div>
@@ -498,21 +505,21 @@
           <div class="question-card">
             <div class="question-number">Question 3</div>
             <div class="question-text">
-              Which plant nutrient is needed most for leaf growth in vegetables
-              like lettuce and cabbage?
+              Identify the subordinating conjunction in this sentence: "We
+              stayed indoors until the rain stopped."
             </div>
             <div class="options">
               <label class="option">
-                <input type="radio" name="q3" value="A" /> A. Potassium
+                <input type="radio" name="q3" value="A" /> A. indoors
               </label>
               <label class="option">
-                <input type="radio" name="q3" value="B" /> B. Nitrogen
+                <input type="radio" name="q3" value="B" /> B. until
               </label>
               <label class="option">
-                <input type="radio" name="q3" value="C" /> C. Phosphorus
+                <input type="radio" name="q3" value="C" /> C. rain
               </label>
               <label class="option">
-                <input type="radio" name="q3" value="D" /> D. Calcium
+                <input type="radio" name="q3" value="D" /> D. stopped
               </label>
             </div>
           </div>
@@ -520,20 +527,24 @@
           <div class="question-card">
             <div class="question-number">Question 4</div>
             <div class="question-text">
-              Which of these is NOT an example of organic fertilizer?
+              Which of the following sentences shows a purpose clause?
             </div>
             <div class="options">
               <label class="option">
-                <input type="radio" name="q4" value="A" /> A. Compost
+                <input type="radio" name="q4" value="A" /> A. I slept because I
+                was tired.
               </label>
               <label class="option">
-                <input type="radio" name="q4" value="B" /> B. Cow dung
+                <input type="radio" name="q4" value="B" /> B. She studied hard
+                so that she could pass.
               </label>
               <label class="option">
-                <input type="radio" name="q4" value="C" /> C. NPK
+                <input type="radio" name="q4" value="C" /> C. I was late
+                although I tried.
               </label>
               <label class="option">
-                <input type="radio" name="q4" value="D" /> D. Green manure
+                <input type="radio" name="q4" value="D" /> D. We played until it
+                was dark.
               </label>
             </div>
           </div>
@@ -541,21 +552,24 @@
           <div class="question-card">
             <div class="question-number">Question 5</div>
             <div class="question-text">
-              Organic fertilizers are usually _______ in nutrient release.
+              Which sentence contains a pronoun that replaces a noun?
             </div>
             <div class="options">
               <label class="option">
-                <input type="radio" name="q5" value="A" /> A. very fast
+                <input type="radio" name="q5" value="A" /> A. The teacher is
+                kind.
               </label>
               <label class="option">
-                <input type="radio" name="q5" value="B" /> B. slow and
-                long-lasting
+                <input type="radio" name="q5" value="B" /> B. The dog is barking
+                loudly.
               </label>
               <label class="option">
-                <input type="radio" name="q5" value="C" /> C. harmful to plants
+                <input type="radio" name="q5" value="C" /> C. Ama is my friend.
+                She helps me always.
               </label>
               <label class="option">
-                <input type="radio" name="q5" value="D" /> D. useless
+                <input type="radio" name="q5" value="D" /> D. My father works in
+                the garden.
               </label>
             </div>
           </div>
@@ -563,24 +577,21 @@
           <div class="question-card">
             <div class="question-number">Question 6</div>
             <div class="question-text">
-              One disadvantage of using too much inorganic fertilizer is that it
-              can ________.
+              Which punctuation mark is used to show a question?
             </div>
             <div class="options">
               <label class="option">
-                <input type="radio" name="q6" value="A" /> A. improve soil
-                structure
+                <input type="radio" name="q6" value="A" /> A. Full stop (.)
               </label>
               <label class="option">
-                <input type="radio" name="q6" value="B" /> B. damage the soil
+                <input type="radio" name="q6" value="B" /> B. Exclamation mark
+                (!)
               </label>
               <label class="option">
-                <input type="radio" name="q6" value="C" /> C. make soil smell
-                bad
+                <input type="radio" name="q6" value="C" /> C. Question mark (?)
               </label>
               <label class="option">
-                <input type="radio" name="q6" value="D" /> D. increase
-                earthworms
+                <input type="radio" name="q6" value="D" /> D. Comma (,)
               </label>
             </div>
           </div>
@@ -588,21 +599,24 @@
           <div class="question-card">
             <div class="question-number">Question 7</div>
             <div class="question-text">
-              Which method of applying inorganic fertilizer involves spraying on
-              leaves?
+              What is the correct order of sentences in a good paragraph?
             </div>
             <div class="options">
               <label class="option">
-                <input type="radio" name="q7" value="A" /> A. Broadcasting
+                <input type="radio" name="q7" value="A" /> A. Concluding
+                sentence → Supporting sentences → Topic sentence
               </label>
               <label class="option">
-                <input type="radio" name="q7" value="B" /> B. Ring method
+                <input type="radio" name="q7" value="B" /> B. Topic sentence →
+                Supporting sentences → Concluding sentence
               </label>
               <label class="option">
-                <input type="radio" name="q7" value="C" /> C. Side dressing
+                <input type="radio" name="q7" value="C" /> C. Supporting
+                sentences → Concluding sentence → Topic sentence
               </label>
               <label class="option">
-                <input type="radio" name="q7" value="D" /> D. Foliar feeding
+                <input type="radio" name="q7" value="D" /> D. Any order is
+                acceptable
               </label>
             </div>
           </div>
@@ -610,20 +624,20 @@
           <div class="question-card">
             <div class="question-number">Question 8</div>
             <div class="question-text">
-              Which fertilizer looks like dark soil and sometimes smells bad?
+              Which of these is a logical connector for contrast?
             </div>
             <div class="options">
               <label class="option">
-                <input type="radio" name="q8" value="A" /> A. Compost
+                <input type="radio" name="q8" value="A" /> A. moreover
               </label>
               <label class="option">
-                <input type="radio" name="q8" value="B" /> B. Urea
+                <input type="radio" name="q8" value="B" /> B. finally
               </label>
               <label class="option">
-                <input type="radio" name="q8" value="C" /> C. NPK
+                <input type="radio" name="q8" value="C" /> C. however
               </label>
               <label class="option">
-                <input type="radio" name="q8" value="D" /> D. Ammonium nitrate
+                <input type="radio" name="q8" value="D" /> D. because
               </label>
             </div>
           </div>
@@ -631,21 +645,21 @@
           <div class="question-card">
             <div class="question-number">Question 9</div>
             <div class="question-text">
-              Root and tuber crops such as yam and cassava need more of which
-              nutrient?
+              (Synonym) Which word is closest in meaning to happy in this
+              sentence? "Finally, I returned home tired but happy."
             </div>
             <div class="options">
               <label class="option">
-                <input type="radio" name="q9" value="A" /> A. Potassium
+                <input type="radio" name="q9" value="A" /> A. sad
               </label>
               <label class="option">
-                <input type="radio" name="q9" value="B" /> B. Nitrogen
+                <input type="radio" name="q9" value="B" /> B. joyful
               </label>
               <label class="option">
-                <input type="radio" name="q9" value="C" /> C. Phosphorus
+                <input type="radio" name="q9" value="C" /> C. angry
               </label>
               <label class="option">
-                <input type="radio" name="q9" value="D" /> D. Sulphur
+                <input type="radio" name="q9" value="D" /> D. weak
               </label>
             </div>
           </div>
@@ -653,137 +667,20 @@
           <div class="question-card">
             <div class="question-number">Question 10</div>
             <div class="question-text">
-              In the ring method of applying fertilizer, the fertilizer is
-              placed ________.
+              (Antonym) Which word is the opposite in meaning to early?
             </div>
             <div class="options">
               <label class="option">
-                <input type="radio" name="q10" value="A" /> A. all over the
-                field
+                <input type="radio" name="q10" value="A" /> A. fast
               </label>
               <label class="option">
-                <input type="radio" name="q10" value="B" /> B. in a circle
-                around the plant
+                <input type="radio" name="q10" value="B" /> B. quick
               </label>
               <label class="option">
-                <input type="radio" name="q10" value="C" /> C. directly on the
-                leaves
+                <input type="radio" name="q10" value="C" /> C. late
               </label>
               <label class="option">
-                <input type="radio" name="q10" value="D" /> D. inside the seed
-              </label>
-            </div>
-          </div>
-
-          <div class="question-card">
-            <div class="question-number">Question 11</div>
-            <div class="question-text">
-              Which of these is a synonym (word with similar meaning) for
-              "manure"?
-            </div>
-            <div class="options">
-              <label class="option">
-                <input type="radio" name="q11" value="A" /> A. Fertilizer
-              </label>
-              <label class="option">
-                <input type="radio" name="q11" value="B" /> B. Stone
-              </label>
-              <label class="option">
-                <input type="radio" name="q11" value="C" /> C. Insect
-              </label>
-              <label class="option">
-                <input type="radio" name="q11" value="D" /> D. Seed
-              </label>
-            </div>
-          </div>
-
-          <div class="question-card">
-            <div class="question-number">Question 12</div>
-            <div class="question-text">
-              Which of these is an antonym (opposite word) of "organic"?
-            </div>
-            <div class="options">
-              <label class="option">
-                <input type="radio" name="q12" value="A" /> A. Natural
-              </label>
-              <label class="option">
-                <input type="radio" name="q12" value="B" /> B. Green
-              </label>
-              <label class="option">
-                <input type="radio" name="q12" value="C" /> C. Inorganic
-              </label>
-              <label class="option">
-                <input type="radio" name="q12" value="D" /> D. Compost
-              </label>
-            </div>
-          </div>
-
-          <div class="question-card">
-            <div class="question-number">Question 13</div>
-            <div class="question-text">
-              Why do farmers sometimes prefer inorganic fertilizers?
-            </div>
-            <div class="options">
-              <label class="option">
-                <input type="radio" name="q13" value="A" /> A. They are free and
-                always available
-              </label>
-              <label class="option">
-                <input type="radio" name="q13" value="B" /> B. They release
-                nutrients quickly
-              </label>
-              <label class="option">
-                <input type="radio" name="q13" value="C" /> C. They are bulky
-                and easy to carry
-              </label>
-              <label class="option">
-                <input type="radio" name="q13" value="D" /> D. They improve soil
-                structure
-              </label>
-            </div>
-          </div>
-
-          <div class="question-card">
-            <div class="question-number">Question 14</div>
-            <div class="question-text">
-              Which fertilizer is very small in volume but rich in nutrients?
-            </div>
-            <div class="options">
-              <label class="option">
-                <input type="radio" name="q14" value="A" /> A. Organic
-                fertilizer
-              </label>
-              <label class="option">
-                <input type="radio" name="q14" value="B" /> B. Inorganic
-                fertilizer
-              </label>
-              <label class="option">
-                <input type="radio" name="q14" value="C" /> C. Compost manure
-              </label>
-              <label class="option">
-                <input type="radio" name="q14" value="D" /> D. Green manure
-              </label>
-            </div>
-          </div>
-
-          <div class="question-card">
-            <div class="question-number">Question 15</div>
-            <div class="question-text">
-              Fruit crops such as mango and orange need more of which nutrient
-              for flowering and fruiting?
-            </div>
-            <div class="options">
-              <label class="option">
-                <input type="radio" name="q15" value="A" /> A. Nitrogen
-              </label>
-              <label class="option">
-                <input type="radio" name="q15" value="B" /> B. Potassium
-              </label>
-              <label class="option">
-                <input type="radio" name="q15" value="C" /> C. Phosphorus
-              </label>
-              <label class="option">
-                <input type="radio" name="q15" value="D" /> D. Magnesium
+                <input type="radio" name="q10" value="D" /> D. soon
               </label>
             </div>
           </div>
@@ -797,7 +694,7 @@
       <!-- Result Screen -->
       <div id="result-screen" class="card result-card hidden">
         <h1>Test Completed!</h1>
-        <div class="score" id="score-display">0/15 (0%)</div>
+        <div class="score" id="score-display">0/10 (0%)</div>
         <div class="score-message" id="score-message">
           Thank you for completing the test.
         </div>
@@ -806,8 +703,8 @@
       </div>
 
       <footer>
-        <p>Made with care by EduHub</p>
-        <p>&copy; 2025 EduHub Assessment Platform. All rights reserved.</p>
+        <p>Made with care by GrammarQuiz</p>
+        <p>&copy; 2025 GrammarQuiz Assessment Platform. All rights reserved.</p>
       </footer>
     </div>
 
@@ -826,140 +723,100 @@
         const scoreMessage = document.getElementById("score-message");
 
         // Timer variables
-        let examDuration = 15 * 60; // 15 minutes in seconds
+        let examDuration = 10 * 60; // 10 minutes in seconds
         let timeRemaining = examDuration;
         let examStartTime;
         let timerInterval;
 
         // Correct answers
         const correctAnswers = {
-          q1: "C",
+          q1: "B",
           q2: "B",
           q3: "B",
-          q4: "C",
-          q5: "B",
-          q6: "B",
-          q7: "D",
-          q8: "A",
-          q9: "C",
-          q10: "B",
-          q11: "A",
-          q12: "C",
-          q13: "B",
-          q14: "B",
-          q15: "B",
+          q4: "B",
+          q5: "C",
+          q6: "C",
+          q7: "B",
+          q8: "C",
+          q9: "B",
+          q10: "C",
         };
 
         // Question texts for email report
         const questionTexts = {
-          q1: "Which of these is an example of an organic fertilizer?",
-          q2: "Inorganic fertilizers are mostly made in ________.",
-          q3: "Which plant nutrient is needed most for leaf growth in vegetables like lettuce and cabbage?",
-          q4: "Which of these is NOT an example of organic fertilizer?",
-          q5: "Organic fertilizers are usually _______ in nutrient release.",
-          q6: "One disadvantage of using too much inorganic fertilizer is that it can ________.",
-          q7: "Which method of applying inorganic fertilizer involves spraying on leaves?",
-          q8: "Which fertilizer looks like dark soil and sometimes smells bad?",
-          q9: "Root and tuber crops such as yam and cassava need more of which nutrient?",
-          q10: "In the ring method of applying fertilizer, the fertilizer is placed ________.",
-          q11: 'Which of these is a synonym (word with similar meaning) for "manure"?',
-          q12: 'Which of these is an antonym (opposite word) of "organic"?',
-          q13: "Why do farmers sometimes prefer inorganic fertilizers?",
-          q14: "Which fertilizer is very small in volume but rich in nutrients?",
-          q15: "Fruit crops such as mango and orange need more of which nutrient for flowering and fruiting?",
+          q1: "Which of the following is the best definition of cohesion in writing?",
+          q2: "Which sentence uses a coordinating conjunction correctly?",
+          q3: 'Identify the subordinating conjunction in this sentence: "We stayed indoors until the rain stopped."',
+          q4: "Which of the following sentences shows a purpose clause?",
+          q5: "Which sentence contains a pronoun that replaces a noun?",
+          q6: "Which punctuation mark is used to show a question?",
+          q7: "What is the correct order of sentences in a good paragraph?",
+          q8: "Which of these is a logical connector for contrast?",
+          q9: '(Synonym) Which word is closest in meaning to happy in this sentence? "Finally, I returned home tired but happy."',
+          q10: "(Antonym) Which word is the opposite in meaning to early?",
         };
 
         // Option texts for email report
         const optionTexts = {
           q1: {
-            A: "A. NPK fertilizer",
-            B: "B. Urea",
-            C: "C. Poultry manure",
-            D: "D. Ammonium sulphate",
+            A: "A. Writing long sentences",
+            B: "B. Joining ideas smoothly so writing makes sense",
+            C: "C. Using only punctuation",
+            D: "D. Memorizing words",
           },
           q2: {
-            A: "A. farms",
-            B: "B. factories",
-            C: "C. kitchens",
-            D: "D. gardens",
+            A: "A. I was hungry because I ate food.",
+            B: "B. I was tired, yet I finished my homework.",
+            C: "C. Although it rained, I went out.",
+            D: "D. Since it was late, we slept.",
           },
           q3: {
-            A: "A. Potassium",
-            B: "B. Nitrogen",
-            C: "C. Phosphorus",
-            D: "D. Calcium",
+            A: "A. indoors",
+            B: "B. until",
+            C: "C. rain",
+            D: "D. stopped",
           },
           q4: {
-            A: "A. Compost",
-            B: "B. Cow dung",
-            C: "C. NPK",
-            D: "D. Green manure",
+            A: "A. I slept because I was tired.",
+            B: "B. She studied hard so that she could pass.",
+            C: "C. I was late although I tried.",
+            D: "D. We played until it was dark.",
           },
           q5: {
-            A: "A. very fast",
-            B: "B. slow and long-lasting",
-            C: "C. harmful to plants",
-            D: "D. useless",
+            A: "A. The teacher is kind.",
+            B: "B. The dog is barking loudly.",
+            C: "C. Ama is my friend. She helps me always.",
+            D: "D. My father works in the garden.",
           },
           q6: {
-            A: "A. improve soil structure",
-            B: "B. damage the soil",
-            C: "C. make soil smell bad",
-            D: "D. increase earthworms",
+            A: "A. Full stop (.)",
+            B: "B. Exclamation mark (!)",
+            C: "C. Question mark (?)",
+            D: "D. Comma (,)",
           },
           q7: {
-            A: "A. Broadcasting",
-            B: "B. Ring method",
-            C: "C. Side dressing",
-            D: "D. Foliar feeding",
+            A: "A. Concluding sentence → Supporting sentences → Topic sentence",
+            B: "B. Topic sentence → Supporting sentences → Concluding sentence",
+            C: "C. Supporting sentences → Concluding sentence → Topic sentence",
+            D: "D. Any order is acceptable",
           },
           q8: {
-            A: "A. Compost",
-            B: "B. Urea",
-            C: "C. NPK",
-            D: "D. Ammonium nitrate",
+            A: "A. moreover",
+            B: "B. finally",
+            C: "C. however",
+            D: "D. because",
           },
           q9: {
-            A: "A. Potassium",
-            B: "B. Nitrogen",
-            C: "C. Phosphorus",
-            D: "D. Sulphur",
+            A: "A. sad",
+            B: "B. joyful",
+            C: "C. angry",
+            D: "D. weak",
           },
           q10: {
-            A: "A. all over the field",
-            B: "B. in a circle around the plant",
-            C: "C. directly on the leaves",
-            D: "D. inside the seed",
-          },
-          q11: {
-            A: "A. Fertilizer",
-            B: "B. Stone",
-            C: "C. Insect",
-            D: "D. Seed",
-          },
-          q12: {
-            A: "A. Natural",
-            B: "B. Green",
-            C: "C. Inorganic",
-            D: "D. Compost",
-          },
-          q13: {
-            A: "A. They are free and always available",
-            B: "B. They release nutrients quickly",
-            C: "C. They are bulky and easy to carry",
-            D: "D. They improve soil structure",
-          },
-          q14: {
-            A: "A. Organic fertilizer",
-            B: "B. Inorganic fertilizer",
-            C: "C. Compost manure",
-            D: "D. Green manure",
-          },
-          q15: {
-            A: "A. Nitrogen",
-            B: "B. Potassium",
-            C: "C. Phosphorus",
-            D: "D. Magnesium",
+            A: "A. fast",
+            B: "B. quick",
+            C: "C. late",
+            D: "D. soon",
           },
         };
 
@@ -1156,10 +1013,10 @@
           // Set message based on score
           if (percentage >= 80) {
             scoreMessage.textContent =
-              "Excellent work! You have a strong understanding of agricultural science concepts.";
+              "Excellent work! You have a strong understanding of English grammar.";
           } else if (percentage >= 60) {
             scoreMessage.textContent =
-              "Good job! You demonstrate solid knowledge of fertilizers and plant nutrients.";
+              "Good job! You demonstrate solid knowledge of English language concepts.";
           } else if (percentage >= 40) {
             scoreMessage.textContent =
               "Fair effort! Review the material to strengthen your understanding.";
@@ -1179,7 +1036,7 @@
         // Send results to email via Formspree
         function sendResultsToEmail(results, score, percentage, isAutoSubmit) {
           // Create email content
-          let emailContent = `EduHub Agricultural Science Test Results\n\n`;
+          let emailContent = `GrammarQuiz English Language Test Results\n\n`;
           emailContent += `Student Score: ${score}/${
             Object.keys(correctAnswers).length
           } (${percentage}%)\n`;
