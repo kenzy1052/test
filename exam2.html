@@ -1,0 +1,1553 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JHS Examination Portal</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --primary: #6366f1;
+        --primary-light: #818cf8;
+        --primary-dark: #4f46e5;
+        --secondary: #06b6d4;
+        --success: #10b981;
+        --danger: #ef4444;
+        --warning: #f59e0b;
+        --bg-primary: #f8fafc;
+        --bg-card: #ffffff;
+        --text-primary: #0f172a;
+        --text-secondary: #64748b;
+        --border: #e2e8f0;
+        --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+        --shadow-lg: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: var(--text-primary);
+        min-height: 100vh;
+      }
+
+      .top-bar {
+        background: var(--bg-card);
+        border-bottom: 1px solid var(--border);
+        padding: 1rem 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: var(--shadow);
+      }
+
+      .logo {
+        font-size: 1.5rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .timer-box {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.25rem;
+        background: var(--bg-primary);
+        border-radius: 12px;
+        font-weight: 600;
+        transition: all 0.3s;
+      }
+
+      .timer-box.warning {
+        background: #fef3c7;
+        color: var(--warning);
+      }
+
+      .timer-box.danger {
+        background: #fee2e2;
+        color: var(--danger);
+        animation: pulse 1s infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.7;
+        }
+      }
+
+      .progress-bar {
+        height: 3px;
+        background: var(--border);
+      }
+
+      .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--primary), var(--secondary));
+        transition: width 0.3s ease;
+        width: 0%;
+      }
+
+      .main-container {
+        display: flex;
+        height: calc(100vh - 60px);
+      }
+
+      .sidebar {
+        width: 280px;
+        background: var(--bg-card);
+        padding: 1.5rem;
+        overflow-y: auto;
+        transition: transform 0.3s ease;
+      }
+
+      .sidebar.hidden-mobile {
+        transform: translateX(-100%);
+        position: fixed;
+        height: calc(100vh - 60px);
+        z-index: 100;
+        box-shadow: var(--shadow-lg);
+      }
+
+      .sidebar.show-mobile {
+        transform: translateX(0);
+      }
+
+      .toggle-sidebar {
+        display: none;
+        position: fixed;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        background: var(--primary);
+        color: white;
+        border: none;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        cursor: pointer;
+        z-index: 99;
+        box-shadow: var(--shadow-lg);
+        transition: all 0.3s;
+      }
+
+      .toggle-sidebar:hover {
+        transform: translateY(-50%) scale(1.1);
+      }
+
+      .section-header {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        margin: 1.5rem 0 0.75rem;
+        letter-spacing: 0.05em;
+      }
+
+      .section-header:first-child {
+        margin-top: 0;
+      }
+
+      .question-nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+
+      .nav-btn {
+        width: 40px;
+        height: 40px;
+        border: 2px solid var(--border);
+        background: white;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-size: 0.875rem;
+      }
+
+      .nav-btn:hover {
+        border-color: var(--primary);
+        transform: scale(1.05);
+      }
+
+      .nav-btn.answered {
+        background: var(--primary);
+        color: white;
+        border-color: var(--primary);
+      }
+
+      .nav-btn.current {
+        border-color: var(--primary);
+        border-width: 3px;
+      }
+
+      .submit-nav-btn {
+        width: 100%;
+        margin-top: 1.5rem;
+        padding: 0.875rem;
+        background: linear-gradient(
+          135deg,
+          var(--primary),
+          var(--primary-dark)
+        );
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .submit-nav-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
+      }
+
+      .content-area {
+        flex: 1;
+        overflow-y: auto;
+        padding: 2rem;
+      }
+
+      .question-container {
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      .question-card {
+        background: var(--bg-card);
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 1.5rem;
+        box-shadow: var(--shadow-lg);
+        animation: slideIn 0.3s ease;
+      }
+
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .question-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+      }
+
+      .question-number {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--primary);
+        text-transform: uppercase;
+      }
+
+      .question-text {
+        font-size: 1.25rem;
+        font-weight: 500;
+        margin-bottom: 2rem;
+        line-height: 1.7;
+      }
+
+      .options {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .option-card {
+        padding: 1.25rem;
+        border: 2px solid var(--border);
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.2s;
+        background: white;
+      }
+
+      .option-card:hover {
+        border-color: var(--primary-light);
+        transform: translateX(8px);
+        box-shadow: var(--shadow);
+      }
+
+      .option-card.selected {
+        border-color: var(--primary);
+        background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+      }
+
+      .navigation-buttons {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 2rem;
+      }
+
+      .btn {
+        padding: 0.875rem 1.75rem;
+        border: none;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-size: 1rem;
+      }
+
+      .btn-primary {
+        background: linear-gradient(
+          135deg,
+          var(--primary),
+          var(--primary-dark)
+        );
+        color: white;
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
+      }
+
+      .btn-secondary {
+        background: var(--bg-primary);
+        color: var(--text-primary);
+        border: 2px solid var(--border);
+      }
+
+      .btn-secondary:hover {
+        border-color: var(--primary);
+      }
+
+      .welcome-screen,
+      .review-screen,
+      .result-screen {
+        max-width: 900px;
+        margin: 2rem auto;
+        padding: 3rem;
+        background: var(--bg-card);
+        border-radius: 20px;
+        box-shadow: var(--shadow-lg);
+      }
+
+      .welcome-screen h1 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .exam-stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+        margin: 2rem 0;
+      }
+
+      .stat-card {
+        padding: 2rem;
+        background: var(--bg-primary);
+        border-radius: 12px;
+        text-align: center;
+      }
+
+      .stat-value {
+        font-size: 3rem;
+        font-weight: 700;
+        color: var(--primary);
+      }
+
+      .stat-label {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        margin-top: 0.5rem;
+      }
+
+      .instructions {
+        background: var(--bg-primary);
+        padding: 2rem;
+        border-radius: 12px;
+        margin: 2rem 0;
+      }
+
+      .instructions h3 {
+        color: var(--primary);
+        margin-bottom: 1rem;
+      }
+
+      .instructions ul {
+        list-style: none;
+        padding: 0;
+      }
+
+      .instructions li {
+        padding: 0.5rem 0;
+        padding-left: 1.75rem;
+        position: relative;
+      }
+
+      .instructions li::before {
+        content: "✓";
+        position: absolute;
+        left: 0;
+        color: var(--success);
+        font-weight: 700;
+      }
+
+      .review-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1rem;
+        margin: 2rem 0;
+      }
+
+      .review-item {
+        padding: 1rem;
+        border-radius: 10px;
+        border: 2px solid var(--border);
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .review-item:hover {
+        border-color: var(--primary);
+        transform: scale(1.02);
+      }
+
+      .review-item.answered {
+        background: #f0fdf4;
+        border-color: var(--success);
+      }
+
+      .review-item.unanswered {
+        background: #fef2f2;
+        border-color: var(--danger);
+      }
+
+      .review-summary {
+        display: flex;
+        gap: 2rem;
+        justify-content: center;
+        margin: 2rem 0;
+        padding: 1.5rem;
+        background: var(--bg-primary);
+        border-radius: 12px;
+      }
+
+      .summary-item {
+        text-align: center;
+      }
+
+      .summary-value {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 0.25rem;
+      }
+
+      .summary-value.answered {
+        color: var(--success);
+      }
+
+      .summary-value.unanswered {
+        color: var(--danger);
+      }
+
+      .result-animation {
+        text-align: center;
+        animation: fadeInScale 0.6s ease;
+      }
+
+      @keyframes fadeInScale {
+        from {
+          opacity: 0;
+          transform: scale(0.9);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      .score-circle {
+        width: 200px;
+        height: 200px;
+        margin: 2rem auto;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: white;
+        box-shadow: 0 20px 40px rgba(99, 102, 241, 0.3);
+        animation: bounce 0.6s ease;
+      }
+
+      @keyframes bounce {
+        0%,
+        20%,
+        50%,
+        80%,
+        100% {
+          transform: translateY(0);
+        }
+        40% {
+          transform: translateY(-30px);
+        }
+        60% {
+          transform: translateY(-15px);
+        }
+      }
+
+      .score-message {
+        font-size: 1.5rem;
+        margin: 2rem 0;
+        color: var(--text-secondary);
+      }
+
+      .confetti {
+        position: fixed;
+        width: 10px;
+        height: 10px;
+        background: var(--primary);
+        animation: confetti-fall 3s linear infinite;
+      }
+
+      @keyframes confetti-fall {
+        to {
+          transform: translateY(100vh) rotate(360deg);
+          opacity: 0;
+        }
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      @media (max-width: 768px) {
+        .sidebar {
+          width: 100%;
+          max-width: 280px;
+        }
+
+        .toggle-sidebar {
+          display: block;
+        }
+
+        .sidebar.hidden-mobile {
+          transform: translateX(-100%);
+        }
+
+        .content-area {
+          padding: 1rem;
+        }
+
+        .question-card {
+          padding: 1.5rem;
+        }
+
+        .exam-stats {
+          grid-template-columns: 1fr;
+        }
+
+        .top-bar {
+          padding: 1rem;
+        }
+
+        .logo {
+          font-size: 1.25rem;
+        }
+
+        .question-nav {
+          gap: 0.375rem;
+        }
+
+        .nav-btn {
+          width: 36px;
+          height: 36px;
+          font-size: 0.75rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="welcome-screen" class="welcome-screen">
+      <h1>🎓 JHS Comprehensive Examination</h1>
+      <p
+        style="
+          text-align: center;
+          color: var(--text-secondary);
+          font-size: 1.125rem;
+          margin-bottom: 2rem;
+        "
+      >
+        English • Science • Mathematics
+      </p>
+
+      <div class="exam-stats">
+        <div class="stat-card">
+          <div class="stat-value">45</div>
+          <div class="stat-label">Questions</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">60</div>
+          <div class="stat-label">Minutes</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">3</div>
+          <div class="stat-label">Sections</div>
+        </div>
+      </div>
+
+      <div class="instructions">
+        <h3>Examination Instructions</h3>
+        <ul>
+          <li>Read each question carefully before selecting your answer</li>
+          <li>Navigate between questions using Next/Previous buttons</li>
+          <li>You can review all answers before final submission</li>
+          <li>The timer will continue even if you refresh the page</li>
+          <li>Your exam will auto-submit when time expires</li>
+          <li>Ensure you have a stable internet connection</li>
+        </ul>
+      </div>
+
+      <div style="text-align: center">
+        <button id="start-btn" class="btn btn-primary">
+          Begin Examination
+        </button>
+      </div>
+    </div>
+
+    <div id="exam-screen" class="hidden">
+      <div class="top-bar">
+        <div class="logo">ExamPortal</div>
+        <div class="timer-box" id="timer">
+          <span>⏱</span>
+          <span id="time-display">60:00</span>
+        </div>
+      </div>
+
+      <div class="progress-bar">
+        <div class="progress-fill" id="progress"></div>
+      </div>
+
+      <button class="toggle-sidebar" id="toggle-sidebar">☰</button>
+
+      <div class="main-container">
+        <aside class="sidebar hidden-mobile" id="sidebar">
+          <div id="nav-sections"></div>
+          <button class="submit-nav-btn" id="review-btn">
+            Review & Submit
+          </button>
+        </aside>
+
+        <main class="content-area">
+          <div class="question-container" id="questions-container"></div>
+        </main>
+      </div>
+    </div>
+
+    <div id="review-screen" class="review-screen hidden">
+      <h1 style="text-align: center">Review Your Answers</h1>
+
+      <div class="review-summary">
+        <div class="summary-item">
+          <div class="summary-value answered" id="review-answered">0</div>
+          <div class="stat-label">Answered</div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-value unanswered" id="review-unanswered">45</div>
+          <div class="stat-label">Unanswered</div>
+        </div>
+      </div>
+
+      <div class="review-grid" id="review-grid"></div>
+
+      <div
+        style="
+          display: flex;
+          gap: 1rem;
+          justify-content: center;
+          margin-top: 2rem;
+        "
+      >
+        <button id="back-to-exam" class="btn btn-secondary">
+          Back to Exam
+        </button>
+        <button id="final-submit" class="btn btn-primary">
+          Submit Examination
+        </button>
+      </div>
+    </div>
+
+    <div id="result-screen" class="result-screen hidden">
+      <div class="result-animation">
+        <h1>Examination Complete!</h1>
+        <div class="score-circle" id="score-circle">0%</div>
+        <div class="score-message" id="score-message"></div>
+        <p style="color: var(--text-secondary); margin: 2rem 0">
+          Your detailed results have been sent to your instructor.
+        </p>
+        <button id="restart-btn" class="btn btn-primary">
+          Take Another Exam
+        </button>
+      </div>
+    </div>
+
+    <script>
+      const questions = [
+        {
+          section: "English",
+          id: "q1",
+          text: "Which of the following is not a type of noun?",
+          options: [
+            "A) Proper noun",
+            "B) Concrete noun",
+            "C) Action noun",
+            "D) Countable noun",
+          ],
+          answer: "C",
+        },
+        {
+          section: "English",
+          id: "q2",
+          text: 'The sentence "The children are playing football at the park" contains which type of noun?',
+          options: [
+            "A) Proper noun",
+            "B) Common noun",
+            "C) Abstract noun",
+            "D) Uncountable noun",
+          ],
+          answer: "B",
+        },
+        {
+          section: "English",
+          id: "q3",
+          text: "Which of these plural forms is irregular?",
+          options: ["A) Chairs", "B) Books", "C) Children", "D) Houses"],
+          answer: "C",
+        },
+        {
+          section: "English",
+          id: "q4",
+          text: 'The word "hers" in the sentence "This bag is hers" is which type of pronoun?',
+          options: [
+            "A) Reflexive pronoun",
+            "B) Possessive pronoun",
+            "C) Relative pronoun",
+            "D) Demonstrative pronoun",
+          ],
+          answer: "B",
+        },
+        {
+          section: "English",
+          id: "q5",
+          text: "Which sentence correctly uses a reflexive pronoun?",
+          options: [
+            "A) Kofi helped himself to some food.",
+            "B) Ama gave hers book to Kojo.",
+            "C) The boy that won himself the prize.",
+            "D) The teacher gave ourselves homework.",
+          ],
+          answer: "A",
+        },
+        {
+          section: "English",
+          id: "q6",
+          text: "Which of the following adjectives is quantitative?",
+          options: ["A) Beautiful", "B) Three", "C) Happy", "D) Strong"],
+          answer: "B",
+        },
+        {
+          section: "English",
+          id: "q7",
+          text: 'Choose the sentence that shows an adjective used after the verb "to be."',
+          options: [
+            "A) She bought a red bag.",
+            "B) The bag is red.",
+            "C) The red bag is on the table.",
+            "D) They carried the red bag home.",
+          ],
+          answer: "B",
+        },
+        {
+          section: "English",
+          id: "q8",
+          text: "Which sentence is in the present perfect tense?",
+          options: [
+            "A) I wash my clothes every Saturday.",
+            "B) I am washing my clothes now.",
+            "C) I have washed my clothes already.",
+            "D) I was washing my clothes when it rained.",
+          ],
+          answer: "C",
+        },
+        {
+          section: "English",
+          id: "q9",
+          text: "Which of these sentences uses an adverb of frequency?",
+          options: [
+            "A) She sings beautifully.",
+            "B) She sings everywhere.",
+            "C) She sings always.",
+            "D) She sings sometimes.",
+          ],
+          answer: "D",
+        },
+        {
+          section: "English",
+          id: "q10",
+          text: 'In the sentence "He quickly solved the hard problem," which word is the adverb?',
+          options: ["A) He", "B) Quickly", "C) Solved", "D) Problem"],
+          answer: "B",
+        },
+        {
+          section: "English",
+          id: "q11",
+          text: "Which of the following is a coordinating conjunction?",
+          options: ["A) Although", "B) Because", "C) And", "D) Since"],
+          answer: "C",
+        },
+        {
+          section: "English",
+          id: "q12",
+          text: "Which pair of words is an example of correlative conjunctions?",
+          options: [
+            "A) If … then",
+            "B) Either … or",
+            "C) But … so",
+            "D) Although … because",
+          ],
+          answer: "B",
+        },
+        {
+          section: "English",
+          id: "q13",
+          text: "Which sentence uses correct capitalisation and punctuation?",
+          options: [
+            "A) we visited cape coast castle last sunday.",
+            "B) We visited Cape Coast Castle last Sunday.",
+            "C) We Visited cape coast castle last sunday.",
+            "D) We visited Cape coast castle last Sunday.",
+          ],
+          answer: "B",
+        },
+        {
+          section: "English",
+          id: "q14",
+          text: 'Which connector best joins these two sentences: "She was tired. She finished the work."',
+          options: ["A) Because", "B) Although", "C) Since", "D) While"],
+          answer: "B",
+        },
+        {
+          section: "English",
+          id: "q15",
+          text: "Which part of a paragraph usually states the main idea?",
+          options: [
+            "A) Concluding sentence",
+            "B) Supporting sentence",
+            "C) Topic sentence",
+            "D) Middle sentence",
+          ],
+          answer: "C",
+        },
+
+        {
+          section: "Science",
+          id: "q16",
+          text: "Which of these is not an organelle of an animal cell?",
+          options: [
+            "A) Nucleus",
+            "B) Cell wall",
+            "C) Ribosome",
+            "D) Mitochondria",
+          ],
+          answer: "B",
+        },
+        {
+          section: "Science",
+          id: "q17",
+          text: "The nucleus of a cell is compared to the brain because it:",
+          options: [
+            "A) Gives energy to the cell",
+            "B) Controls all activities of the cell",
+            "C) Stores food and water",
+            "D) Breaks down waste materials",
+          ],
+          answer: "B",
+        },
+        {
+          section: "Science",
+          id: "q18",
+          text: 'Which organelle is known as the "powerhouse of the cell"?',
+          options: [
+            "A) Ribosome",
+            "B) Vacuole",
+            "C) Mitochondrion",
+            "D) Lysosome",
+          ],
+          answer: "C",
+        },
+        {
+          section: "Science",
+          id: "q19",
+          text: "The structure that allows a plant cell to maintain its shape is:",
+          options: [
+            "A) Cell wall",
+            "B) Cytoplasm",
+            "C) Vacuole",
+            "D) Cell membrane",
+          ],
+          answer: "A",
+        },
+        {
+          section: "Science",
+          id: "q20",
+          text: "Which organelle is present in plant cells but absent in animal cells?",
+          options: [
+            "A) Nucleus",
+            "B) Chloroplast",
+            "C) Cytoplasm",
+            "D) Ribosome",
+          ],
+          answer: "B",
+        },
+        {
+          section: "Science",
+          id: "q21",
+          text: "The process by which plants make food using sunlight is called:",
+          options: [
+            "A) Respiration",
+            "B) Digestion",
+            "C) Photosynthesis",
+            "D) Fermentation",
+          ],
+          answer: "C",
+        },
+        {
+          section: "Science",
+          id: "q22",
+          text: "What is the correct order of the housefly's life cycle?",
+          options: [
+            "A) Egg → Pupa → Larva → Adult",
+            "B) Egg → Larva → Pupa → Adult",
+            "C) Egg → Adult → Larva → Pupa",
+            "D) Egg → Larva → Adult → Pupa",
+          ],
+          answer: "B",
+        },
+        {
+          section: "Science",
+          id: "q23",
+          text: "Which stage of the housefly is also called the maggot?",
+          options: ["A) Egg", "B) Larva", "C) Pupa", "D) Adult"],
+          answer: "B",
+        },
+        {
+          section: "Science",
+          id: "q24",
+          text: "The state of matter with no fixed shape and no fixed volume is:",
+          options: ["A) Solid", "B) Liquid", "C) Gas", "D) Plasma"],
+          answer: "C",
+        },
+        {
+          section: "Science",
+          id: "q25",
+          text: "Which of the following is an example of a liquid used in transport?",
+          options: ["A) Water", "B) Petrol", "C) Blood", "D) Soup"],
+          answer: "B",
+        },
+        {
+          section: "Science",
+          id: "q26",
+          text: "Which element among the first 20 is a noble gas?",
+          options: [
+            "A) Sodium (Na)",
+            "B) Chlorine (Cl)",
+            "C) Neon (Ne)",
+            "D) Magnesium (Mg)",
+          ],
+          answer: "C",
+        },
+        {
+          section: "Science",
+          id: "q27",
+          text: "Which of the following is a metal in the first 20 elements?",
+          options: [
+            "A) Oxygen (O)",
+            "B) Calcium (Ca)",
+            "C) Phosphorus (P)",
+            "D) Sulphur (S)",
+          ],
+          answer: "B",
+        },
+        {
+          section: "Science",
+          id: "q28",
+          text: "Which nutrient is most needed by leafy vegetables?",
+          options: [
+            "A) Nitrogen",
+            "B) Potassium",
+            "C) Phosphorus",
+            "D) Calcium",
+          ],
+          answer: "A",
+        },
+        {
+          section: "Science",
+          id: "q29",
+          text: "Animals with a four-part stomach that chew cud are called:",
+          options: [
+            "A) Monogastrics",
+            "B) Ruminants",
+            "C) Poultry",
+            "D) Omnivores",
+          ],
+          answer: "B",
+        },
+        {
+          section: "Science",
+          id: "q30",
+          text: "Which domestic animal is a monogastric omnivore?",
+          options: ["A) Cow", "B) Sheep", "C) Pig", "D) Goat"],
+          answer: "C",
+        },
+
+        {
+          section: "Mathematics",
+          id: "q31",
+          text: "Which of these is an algebraic expression?",
+          options: ["A) 25 + 15", "B) x + 10", "C) 7 × 4", "D) 100 – 20"],
+          answer: "B",
+        },
+        {
+          section: "Mathematics",
+          id: "q32",
+          text: 'The phrase "5 less than a number y" can be written as:',
+          options: ["A) y + 5", "B) y – 5", "C) 5 – y", "D) 5y"],
+          answer: "B",
+        },
+        {
+          section: "Mathematics",
+          id: "q33",
+          text: "Simplify: 7x + 3x – 5x",
+          options: ["A) 5x", "B) 10x", "C) 15x", "D) –5x"],
+          answer: "A",
+        },
+        {
+          section: "Mathematics",
+          id: "q34",
+          text: "Which of these is the simplified form of: 4a + 3b + 2a – b?",
+          options: [
+            "A) 6a + 2b",
+            "B) 4a + 3b – 2a – b",
+            "C) 6a + 4b",
+            "D) 2a + 2b",
+          ],
+          answer: "A",
+        },
+        {
+          section: "Mathematics",
+          id: "q35",
+          text: "Multiply: (–2x)(3y)",
+          options: ["A) –5xy", "B) 6xy", "C) –6xy", "D) –2x + 3y"],
+          answer: "C",
+        },
+        {
+          section: "Mathematics",
+          id: "q36",
+          text: "Divide: 12x³ ÷ 3x",
+          options: ["A) 4x²", "B) 4x³", "C) 9x²", "D) x⁴"],
+          answer: "A",
+        },
+        {
+          section: "Mathematics",
+          id: "q37",
+          text: "If x = 2 and y = 3, evaluate: 5x + 2y",
+          options: ["A) 10", "B) 11", "C) 16", "D) 19"],
+          answer: "C",
+        },
+        {
+          section: "Mathematics",
+          id: "q38",
+          text: "The ratio of 18 to 24 in simplest form is:",
+          options: ["A) 3:4", "B) 2:3", "C) 4:3", "D) 9:12"],
+          answer: "B",
+        },
+        {
+          section: "Mathematics",
+          id: "q39",
+          text: "A car travels 120 km in 3 hours. Its speed is:",
+          options: ["A) 30 km/h", "B) 40 km/h", "C) 60 km/h", "D) 90 km/h"],
+          answer: "B",
+        },
+        {
+          section: "Mathematics",
+          id: "q40",
+          text: "The ages of Kofi and Ama are in the ratio 2:3. If Kofi is 10 years, how old is Ama?",
+          options: ["A) 12", "B) 15", "C) 20", "D) 30"],
+          answer: "B",
+        },
+        {
+          section: "Mathematics",
+          id: "q41",
+          text: "If 1 pen costs GH₵2, how much will 15 pens cost?",
+          options: ["A) GH₵17", "B) GH₵20", "C) GH₵25", "D) GH₵30"],
+          answer: "D",
+        },
+        {
+          section: "Mathematics",
+          id: "q42",
+          text: "Solve: x + 7 = 15",
+          options: ["A) 8", "B) 22", "C) 7", "D) 2"],
+          answer: "A",
+        },
+        {
+          section: "Mathematics",
+          id: "q43",
+          text: "Solve: 3x – 5 = 10",
+          options: ["A) x = 3", "B) x = 5", "C) x = 10", "D) x = 15"],
+          answer: "B",
+        },
+        {
+          section: "Mathematics",
+          id: "q44",
+          text: "The ratio of boys to girls in a class is 2:5. If there are 40 girls, how many boys are there?",
+          options: ["A) 8", "B) 12", "C) 16", "D) 20"],
+          answer: "C",
+        },
+        {
+          section: "Mathematics",
+          id: "q45",
+          text: "Ama, Kofi, and Esi share GH₵900 in the ratio 2:3:4. How much does Esi get?",
+          options: ["A) GH₵200", "B) GH₵300", "C) GH₵400", "D) GH₵450"],
+          answer: "C",
+        },
+      ];
+
+      let state = {
+        currentPage: 0,
+        questionsPerPage: 5,
+        answers: {},
+        startTime: null,
+        timeRemaining: 60 * 60,
+        timerInterval: null,
+      };
+
+      const welcomeScreen = document.getElementById("welcome-screen");
+      const examScreen = document.getElementById("exam-screen");
+      const reviewScreen = document.getElementById("review-screen");
+      const resultScreen = document.getElementById("result-screen");
+
+      function init() {
+        const savedState = localStorage.getItem("examState");
+        if (savedState) {
+          const saved = JSON.parse(savedState);
+          const elapsed = Math.floor((Date.now() - saved.startTime) / 1000);
+          if (elapsed < 60 * 60) {
+            state = {
+              ...saved,
+              timeRemaining: 60 * 60 - elapsed,
+              timerInterval: null,
+            };
+            startExam();
+            return;
+          }
+        }
+      }
+
+      function startExam() {
+        welcomeScreen.classList.add("hidden");
+        examScreen.classList.remove("hidden");
+
+        if (!state.startTime) {
+          state.startTime = Date.now();
+          saveState();
+        }
+
+        renderNavigation();
+        renderQuestions();
+        startTimer();
+        updateProgress();
+      }
+
+      function renderNavigation() {
+        const nav = document.getElementById("nav-sections");
+        const sections = [...new Set(questions.map((q) => q.section))];
+
+        let html = "";
+        sections.forEach((section) => {
+          const sectionQuestions = questions.filter(
+            (q) => q.section === section
+          );
+          html += `<div class="section-header">${section}</div><div class="question-nav">`;
+          sectionQuestions.forEach((q, i) => {
+            const qIndex = questions.indexOf(q);
+            const classes = ["nav-btn"];
+            if (state.answers[q.id]) classes.push("answered");
+            if (
+              Math.floor(qIndex / state.questionsPerPage) === state.currentPage
+            )
+              classes.push("current");
+            html += `<button class="${classes.join(
+              " "
+            )}" onclick="goToQuestion(${qIndex})">${qIndex + 1}</button>`;
+          });
+          html += "</div>";
+        });
+
+        nav.innerHTML = html;
+      }
+
+      function renderQuestions() {
+        const container = document.getElementById("questions-container");
+        const start = state.currentPage * state.questionsPerPage;
+        const end = Math.min(start + state.questionsPerPage, questions.length);
+
+        let html = "";
+        for (let i = start; i < end; i++) {
+          const q = questions[i];
+          const selectedAnswer = state.answers[q.id];
+
+          html += `
+                    <div class="question-card">
+                        <div class="question-header">
+                            <div class="question-number">Question ${i + 1} of ${
+            questions.length
+          }</div>
+                        </div>
+                        <div class="question-text">${q.text}</div>
+                        <div class="options">
+                            ${q.options
+                              .map(
+                                (opt, idx) => `
+                                <div class="option-card ${
+                                  selectedAnswer ===
+                                  String.fromCharCode(65 + idx)
+                                    ? "selected"
+                                    : ""
+                                }" 
+                                     onclick="selectAnswer('${
+                                       q.id
+                                     }', '${String.fromCharCode(65 + idx)}')">
+                                    ${opt}
+                                </div>
+                            `
+                              )
+                              .join("")}
+                        </div>
+                    </div>
+                `;
+        }
+
+        html += `
+                <div class="navigation-buttons">
+                    <button class="btn btn-secondary" onclick="previousPage()" ${
+                      state.currentPage === 0 ? "disabled" : ""
+                    }>
+                        ← Previous
+                    </button>
+                    <button class="btn btn-primary" onclick="nextPage()">
+                        ${
+                          end >= questions.length ? "Review & Submit" : "Next →"
+                        }
+                    </button>
+                </div>
+            `;
+
+        container.innerHTML = html;
+      }
+
+      window.goToQuestion = function (index) {
+        state.currentPage = Math.floor(index / state.questionsPerPage);
+        renderNavigation();
+        renderQuestions();
+        document.querySelector(".content-area").scrollTop = 0;
+      };
+
+      window.selectAnswer = function (questionId, answer) {
+        state.answers[questionId] = answer;
+        saveState();
+        renderNavigation();
+        renderQuestions();
+        updateProgress();
+      };
+
+      window.previousPage = function () {
+        if (state.currentPage > 0) {
+          state.currentPage--;
+          renderNavigation();
+          renderQuestions();
+          document.querySelector(".content-area").scrollTop = 0;
+        }
+      };
+
+      window.nextPage = function () {
+        const maxPage =
+          Math.ceil(questions.length / state.questionsPerPage) - 1;
+        if (state.currentPage < maxPage) {
+          state.currentPage++;
+          renderNavigation();
+          renderQuestions();
+          document.querySelector(".content-area").scrollTop = 0;
+        } else {
+          showReviewScreen();
+        }
+      };
+
+      function showReviewScreen() {
+        examScreen.classList.add("hidden");
+        reviewScreen.classList.remove("hidden");
+
+        const answered = Object.keys(state.answers).length;
+        const unanswered = questions.length - answered;
+
+        document.getElementById("review-answered").textContent = answered;
+        document.getElementById("review-unanswered").textContent = unanswered;
+
+        const grid = document.getElementById("review-grid");
+        grid.innerHTML = questions
+          .map((q, i) => {
+            const isAnswered = state.answers[q.id];
+            return `
+                    <div class="review-item ${
+                      isAnswered ? "answered" : "unanswered"
+                    }" onclick="goToQuestionFromReview(${i})">
+                        <div style="font-weight: 600; margin-bottom: 0.5rem;">Question ${
+                          i + 1
+                        }</div>
+                        <div style="font-size: 0.875rem; color: var(--text-secondary);">${
+                          q.section
+                        }</div>
+                        <div style="margin-top: 0.5rem; font-weight: 600; color: ${
+                          isAnswered ? "var(--success)" : "var(--danger)"
+                        };">
+                            ${isAnswered ? "✓ Answered" : "✗ Not Answered"}
+                        </div>
+                    </div>
+                `;
+          })
+          .join("");
+      }
+
+      window.goToQuestionFromReview = function (index) {
+        reviewScreen.classList.add("hidden");
+        examScreen.classList.remove("hidden");
+        goToQuestion(index);
+      };
+
+      function startTimer() {
+        updateTimerDisplay();
+        state.timerInterval = setInterval(() => {
+          state.timeRemaining--;
+          updateTimerDisplay();
+
+          if (state.timeRemaining <= 0) {
+            submitExam(true);
+          }
+        }, 1000);
+      }
+
+      function updateTimerDisplay() {
+        const minutes = Math.floor(state.timeRemaining / 60);
+        const seconds = state.timeRemaining % 60;
+        document.getElementById(
+          "time-display"
+        ).textContent = `${minutes}:${seconds.toString().padStart(2, "0")}`;
+
+        const timer = document.getElementById("timer");
+        timer.classList.remove("warning", "danger");
+        if (state.timeRemaining <= 60) timer.classList.add("danger");
+        else if (state.timeRemaining <= 300) timer.classList.add("warning");
+      }
+
+      function updateProgress() {
+        const answered = Object.keys(state.answers).length;
+        document.getElementById("progress").style.width = `${
+          (answered / questions.length) * 100
+        }%`;
+      }
+
+      function submitExam(autoSubmit = false) {
+        clearInterval(state.timerInterval);
+
+        let score = 0;
+        const results = questions.map((q, i) => {
+          const studentAnswer = state.answers[q.id] || "Not answered";
+          const isCorrect = studentAnswer === q.answer;
+          if (isCorrect) score++;
+
+          return {
+            number: i + 1,
+            section: q.section,
+            question: q.text,
+            options: q.options,
+            studentAnswer:
+              studentAnswer === "Not answered"
+                ? studentAnswer
+                : q.options[studentAnswer.charCodeAt(0) - 65],
+            correctAnswer: q.options[q.answer.charCodeAt(0) - 65],
+            isCorrect,
+          };
+        });
+
+        const percentage = Math.round((score / questions.length) * 100);
+        displayResults(score, percentage);
+        sendResultsToInstructor(results, score, percentage, autoSubmit);
+
+        localStorage.removeItem("examState");
+      }
+
+      function displayResults(score, percentage) {
+        reviewScreen.classList.add("hidden");
+        examScreen.classList.add("hidden");
+        resultScreen.classList.remove("hidden");
+
+        document.getElementById("score-circle").textContent = `${percentage}%`;
+
+        const message = document.getElementById("score-message");
+        if (percentage >= 80) {
+          message.textContent =
+            "Outstanding! Exceptional performance across all sections.";
+          createConfetti();
+        } else if (percentage >= 60) {
+          message.textContent =
+            "Well done! You demonstrated solid understanding.";
+        } else if (percentage >= 40) {
+          message.textContent =
+            "Good effort. Review the material to improve further.";
+        } else {
+          message.textContent =
+            "Keep practicing. Focus on understanding key concepts.";
+        }
+      }
+
+      function createConfetti() {
+        const colors = ["#6366f1", "#06b6d4", "#10b981", "#f59e0b", "#ef4444"];
+        for (let i = 0; i < 50; i++) {
+          setTimeout(() => {
+            const confetti = document.createElement("div");
+            confetti.className = "confetti";
+            confetti.style.left = Math.random() * 100 + "%";
+            confetti.style.background =
+              colors[Math.floor(Math.random() * colors.length)];
+            confetti.style.animationDelay = Math.random() * 3 + "s";
+            document.body.appendChild(confetti);
+            setTimeout(() => confetti.remove(), 3000);
+          }, i * 30);
+        }
+      }
+
+      function sendResultsToInstructor(results, score, percentage, autoSubmit) {
+        let emailContent = `JHS COMPREHENSIVE EXAMINATION - RESULTS\n\n`;
+        emailContent += `Score: ${score}/${questions.length} (${percentage}%)\n`;
+        emailContent += `Submission: ${
+          autoSubmit ? "Auto-submitted (time expired)" : "Manual submission"
+        }\n`;
+        emailContent += `Date: ${new Date().toLocaleString()}\n\n`;
+        emailContent += `${"=".repeat(70)}\n\n`;
+
+        let currentSection = "";
+        results.forEach((result) => {
+          if (result.section !== currentSection) {
+            currentSection = result.section;
+            emailContent += `\n${currentSection.toUpperCase()}\n${"-".repeat(
+              70
+            )}\n\n`;
+          }
+
+          emailContent += `Q${result.number}: ${result.question}\n\n`;
+          result.options.forEach((opt) => (emailContent += `  ${opt}\n`));
+          emailContent += `\nStudent: ${result.studentAnswer}\n`;
+          emailContent += `Correct: ${result.correctAnswer}\n`;
+          emailContent += `${result.isCorrect ? "✓ CORRECT" : "✗ INCORRECT"}\n`;
+          emailContent += `\n${"=".repeat(70)}\n\n`;
+        });
+
+        const form = document.createElement("form");
+        form.method = "POST";
+        form.action = "https://formspree.io/f/mgvypvgr";
+        form.target = "_blank";
+
+        const input = document.createElement("input");
+        input.type = "hidden";
+        input.name = "message";
+        input.value = emailContent;
+        form.appendChild(input);
+
+        document.body.appendChild(form);
+        form.submit();
+        document.body.removeChild(form);
+      }
+
+      function saveState() {
+        localStorage.setItem(
+          "examState",
+          JSON.stringify({
+            currentPage: state.currentPage,
+            questionsPerPage: state.questionsPerPage,
+            answers: state.answers,
+            startTime: state.startTime,
+            timeRemaining: state.timeRemaining,
+          })
+        );
+      }
+
+      document.getElementById("start-btn").addEventListener("click", startExam);
+      document
+        .getElementById("review-btn")
+        .addEventListener("click", showReviewScreen);
+      document.getElementById("back-to-exam").addEventListener("click", () => {
+        reviewScreen.classList.add("hidden");
+        examScreen.classList.remove("hidden");
+      });
+      document.getElementById("final-submit").addEventListener("click", () => {
+        if (
+          confirm(
+            "Are you sure you want to submit your examination? This action cannot be undone."
+          )
+        ) {
+          submitExam(false);
+        }
+      });
+      document.getElementById("restart-btn").addEventListener("click", () => {
+        state = {
+          currentPage: 0,
+          questionsPerPage: 5,
+          answers: {},
+          startTime: null,
+          timeRemaining: 60 * 60,
+          timerInterval: null,
+        };
+        resultScreen.classList.add("hidden");
+        welcomeScreen.classList.remove("hidden");
+      });
+
+      document
+        .getElementById("toggle-sidebar")
+        .addEventListener("click", () => {
+          document.getElementById("sidebar").classList.toggle("show-mobile");
+        });
+
+      init();
+    </script>
+  </body>
+</html>
